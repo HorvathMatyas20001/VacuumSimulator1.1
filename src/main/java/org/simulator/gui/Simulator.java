@@ -3,8 +3,10 @@ package org.simulator.gui;
 import org.simulator.board.StateType;
 import org.simulator.controls.Exit;
 import org.simulator.controls.SimulatorLogic;
-import org.simulator.data.NewFileCreator;
-import org.simulator.data.Save;
+import org.simulator.data.newFile.NewFileCreator;
+import org.simulator.data.openFile.OpenFileCreator;
+import org.simulator.data.saveFile.Save;
+import org.simulator.data.SaveFileAs.SaveAsCreator;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,11 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Simulator {
-
-    private JPanel componentsMenu;
     private SimulatorLogic logic;
     private List<ComponentButtons> componentButtonsList;
-    private CheckConnections checkConnectionsButton;
 
     public Simulator(){
         JFrame frame = new JFrame("Vacuum Simulator");
@@ -35,9 +34,11 @@ public class Simulator {
         JMenuItem newItem = new JMenuItem("New");
         newItem.addActionListener(new NewFileCreator(logic));
         JMenuItem openItem = new JMenuItem("Open");
+        openItem.addActionListener(new OpenFileCreator(logic));
         JMenuItem saveItem = new JMenuItem("Save");
         saveItem.addActionListener(new Save(logic));
         JMenuItem saveAsItem = new JMenuItem("Save as");
+        saveAsItem.addActionListener(new SaveAsCreator(logic));
         JMenuItem exitItem = new JMenuItem("Exit");
         exitItem.addActionListener(new Exit());
 
@@ -53,28 +54,20 @@ public class Simulator {
 
         JPanel sideMenu = new JPanel();
         sideMenu.setBackground(Color.LIGHT_GRAY);
-        sideMenu.setLayout(new GridLayout(11, 1));
+        sideMenu.setLayout(new GridLayout(10, 1));
         JLabel componentLabel = new JLabel("Components");
         sideMenu.add(componentLabel);
 
-        CheckConnections checkConnectionsButton = new CheckConnections(logic);
-        sideMenu.add(checkConnectionsButton);
-
         componentButtonsList = new ArrayList<>();
-        logic.setComponentButtonsList(componentButtonsList);
-        logic.setCheckConnectionsButton(checkConnectionsButton);
 
-        for(StateType stateType: StateType.values()){
-            if(stateType != StateType.NONE){
-                componentButtonsList.add( new ComponentButtons(logic, stateType,componentButtonsList));
+        for (StateType stateType: StateType.values()) {
+            if(stateType != StateType.NONE) {
+                sideMenu.add(new ComponentButtons(logic, stateType, componentButtonsList));
             }
         }
 
-        for (ComponentButtons componentButtons : componentButtonsList) {
-            sideMenu.add(componentButtons);
-        }
-
         frame.add(sideMenu, BorderLayout.LINE_END);
+        frame.add(logic.getInfoPanel(),BorderLayout.LINE_START);
         frame.setVisible(true);
     }
 }

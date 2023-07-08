@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Tile extends JPanel {
-    @Getter
+    @Getter @Setter
     private Map<Direction,Connection> neighbours;
     @Getter @Setter
     private StateType stateType;
@@ -109,16 +109,12 @@ public class Tile extends JPanel {
             case DRAW_MODE:
                 this.setBackground(Color.WHITE);
                 break;
-            case CHECK_CONNECTION_MODE:
-                this.setBackground(Color.GRAY);
-                break;
             case NONE:
                 this.setBackground(Color.WHITE);
+                break;
         }
-        if(mode == Mode.CHECK_CONNECTION_MODE && tooManyConnections){
+        if(tooManyConnections || tooFewConnections){
             g.setColor(Color.RED);
-        }else if(mode == Mode.CHECK_CONNECTION_MODE && tooFewConnections){
-            g.setColor(Color.GREEN);
         }
 
         g.fillRoundRect((int) (0 + this.getWidth() * 0.075),(int) (0 + this.getHeight() * 0.075),(int) (this.getWidth() * 0.85),(int) (this.getHeight() * 0.85),30,30);

@@ -42,9 +42,6 @@ public class Board extends JPanel{
             case NONE:
                 this.setBackground(Color.WHITE);
                 break;
-            case CHECK_CONNECTION_MODE:
-                this.setBackground(Color.GRAY);
-                break;
         }
         for (int i = 0; i < xDimension; i++) {
             for (int j = 0; j < yDimension; j++) {

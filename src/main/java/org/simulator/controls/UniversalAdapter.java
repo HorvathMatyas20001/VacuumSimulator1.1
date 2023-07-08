@@ -4,7 +4,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.event.*;
 
-public class UniversalAdapter implements KeyListener, MouseMotionListener, MouseListener, ActionListener, ChangeListener {
+public abstract class UniversalAdapter implements KeyListener, MouseMotionListener, MouseListener, ActionListener, ChangeListener {
     @Override
     public void actionPerformed(ActionEvent e) {
     }

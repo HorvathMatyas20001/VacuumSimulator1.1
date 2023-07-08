@@ -33,13 +33,15 @@ public class ComponentButtons extends JButton implements ActionListener{
     }
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(this.logic.getDrawType() != this.type){
-            this.logic.setDrawType(this.type);
-        }else{
-            this.logic.setDrawType(StateType.NONE);
+        if(this.logic.getBoard() != null){
+            if(this.logic.getDrawType() != this.type){
+                this.logic.setDrawType(this.type);
+            }else{
+                this.logic.setDrawType(StateType.NONE);
+            }
+            this.logic.changeMode(Mode.DRAW_MODE);
+            onClick();
         }
-        this.logic.changeMode(Mode.DRAW_MODE);
-        onClick();
     }
     @Override
     protected void paintComponent(Graphics g) {
@@ -59,7 +61,6 @@ public class ComponentButtons extends JButton implements ActionListener{
         for(ComponentButtons buttons: componentButtonsList){
             if(buttons.getType() == this.logic.getDrawType()){
                 buttons.getModel().setPressed(true);
-                logic.getCheckConnectionsButton().getModel().setPressed(false);
             }else{
                 buttons.getModel().setPressed(false);
             }

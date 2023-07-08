@@ -6,13 +6,13 @@ import java.awt.*;
 
 public enum StateType {
     EMPTY(0,0,false,Color.WHITE),
+    PIPE(2,4,false,Color.PINK),
     CHAMBER(1,4,false,Color.CYAN),
-    FORE_VACUUM_PUMP(1,1,true,Color.YELLOW),
     GAUGE(1,1,false,Color.MAGENTA),
-    HV_PUMP(2,2,true,Color.PINK),
-    PIPE(2,4,false,Color.LIGHT_GRAY),
-    PUMP_STAND(1,1,true,Color.BLACK),
-    VALVE(2,2,true,Color.DARK_GRAY),
+    HV_PUMP(2,2,true,Color.LIGHT_GRAY),
+    PUMP_STAND(1,1,true,Color.DARK_GRAY),
+    FORE_VACUUM_PUMP(1,1,true,Color.BLACK),
+    VALVE(2,2,true,Color.YELLOW),
     VENTING_VALVE(1,1,true,Color.ORANGE),
     NONE(0,0,false,null);
     @Getter

@@ -6,20 +6,17 @@ import org.simulator.board.Board;
 import org.simulator.board.Direction;
 import org.simulator.board.StateType;
 import org.simulator.board.Tile;
-import org.simulator.gui.CheckConnections;
-import org.simulator.gui.ComponentButtons;
+import org.simulator.gui.InfoPanel;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.util.List;
 import java.util.Objects;
 
 
 public class SimulatorLogic extends UniversalAdapter{
     @Getter
-    private JFrame mainFrame;
-    public static final int INITIAL_BOARD_SIZE = 10;
+    private final JFrame mainFrame;
     @Getter
     private Mode mode;
     @Getter @Setter
@@ -28,40 +25,24 @@ public class SimulatorLogic extends UniversalAdapter{
     private StateType drawType;
     private Tile startTile;
     private Tile endTile;
-    @Getter
-    private int xDimension;
-    @Getter
-    private int yDimension;
     @Getter @Setter
-    private List<ComponentButtons> componentButtonsList;
-    @Getter @Setter
-    private CheckConnections checkConnectionsButton;
+    private String path;
+    @Getter
+    private final InfoPanel infoPanel;
 
     public SimulatorLogic(JFrame mainFrame){
         this.drawType = StateType.NONE;
         this.mainFrame = mainFrame;
-        xDimension = 10;
-        yDimension = 20;
-        //this.initializeNewBoard(xDimension,yDimension);
-        //this.mainFrame.add(this.board);
         mainFrame.setVisible(true);
         this.mode = Mode.DRAW_MODE;
-        startTile = null;
-        endTile = null;
-    }
-
-    private void initializeNewBoard(int xDimension, int yDimension){
-        this.board = new Board(xDimension,yDimension);
-        this.board.addMouseListener(this);
-        this.board.addMouseMotionListener(this);
+        this.startTile = null;
+        this.endTile = null;
+        infoPanel = new InfoPanel();
     }
     public void changeMode(Mode mode){
         this.board.changeBoardMode(mode);
         this.mode = mode;
         this.board.repaint();
-    }
-    private void generateErrorMessage(){
-
     }
     private void paintTile(MouseEvent e){
         try {
@@ -69,6 +50,7 @@ public class SimulatorLogic extends UniversalAdapter{
             if (drawType != StateType.NONE && drawType != this.board.findTile((Tile) current).getStateType()) {
                 this.board.changeTile((Tile) current, drawType);
             }
+            CheckConnectionLogic.setFlagForIncorrectConnections(board);
             this.board.repaint();
         }catch(Exception i){
             //System.out.println("not tile");
@@ -79,16 +61,7 @@ public class SimulatorLogic extends UniversalAdapter{
         try{
             Component current = this.board.getComponentAt(e.getX(), e.getY());
             Tile temp = (Tile)current;
-            String error = "none";
-            if(temp.isTooFewConnections()){
-                error = "too few connections";
-            }else if(temp.isTooManyConnections()){
-                error = "too Many connections";
-            }
-            JOptionPane.showMessageDialog(null,"Component type:"+ temp.getStateType()+"\n"
-                    + "Max connections:" + temp.getStateType().getMaxConnections() + "\n"
-                    + "Min connections:" + temp.getStateType().getMinConnections() + "\n"
-                    + "Errors:" + error,"Information",JOptionPane.INFORMATION_MESSAGE);
+            infoPanel.updateInfoPanel(temp);
         }catch(ClassCastException i){}
     }
 
@@ -107,6 +80,7 @@ public class SimulatorLogic extends UniversalAdapter{
         if (SwingUtilities.isRightMouseButton(e)) {
             getComponentInfo(e);
         }else if(SwingUtilities.isLeftMouseButton(e)){
+
             paintTile(e);
         }
     }
@@ -140,6 +114,7 @@ public class SimulatorLogic extends UniversalAdapter{
             //testStartAndEnd(startTile, endTile);
             endTile = null;
             startTile = null;
+            CheckConnectionLogic.setFlagForIncorrectConnections(board);
             this.board.repaint();
         }catch(Exception i){
             //System.out.println("not tile");

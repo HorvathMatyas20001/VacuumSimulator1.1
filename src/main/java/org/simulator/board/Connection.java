@@ -9,8 +9,6 @@ public class Connection {
     private Tile tile;
     @Getter @Setter
     private boolean connected;
-    @Getter @Setter
-    private int order;
 
     public Connection(Tile tile){
         this.tile = tile;
