@@ -53,18 +53,20 @@ public class SimulatorLogic extends UniversalAdapter{
             CheckConnectionLogic.setFlagForIncorrectConnections(board);
             this.board.repaint();
         }catch(Exception i){
-            //System.out.println("not tile");
+            System.out.println("not tile");
         }
     }
     private void getComponentInfo(MouseEvent e){
-        this.board.repaint();
+        //this.board.repaint();
         try{
             Component current = this.board.getComponentAt(e.getX(), e.getY());
             Tile temp = (Tile)current;
             infoPanel.updateInfoPanel(temp);
-        }catch(ClassCastException i){}
+        }catch(ClassCastException i){
+            System.out.println("not tile");
+        }
     }
-
+    //mouseMoved is only for testing
     @Override
     public void mouseMoved(MouseEvent e){
         try{
@@ -72,7 +74,7 @@ public class SimulatorLogic extends UniversalAdapter{
             //this.board.TestStatus((Tile) current);
             //test((Tile) current);
         }catch(Exception i){
-            //System.out.println("not a tile");
+            System.out.println("not a tile");
         }
     }
     @Override
@@ -80,7 +82,6 @@ public class SimulatorLogic extends UniversalAdapter{
         if (SwingUtilities.isRightMouseButton(e)) {
             getComponentInfo(e);
         }else if(SwingUtilities.isLeftMouseButton(e)){
-
             paintTile(e);
         }
     }
@@ -90,9 +91,8 @@ public class SimulatorLogic extends UniversalAdapter{
             Component current = this.board.getComponentAt(e.getX(), e.getY());
             startTile = this.board.findTile((Tile) current);
         }catch(Exception i){
-            //System.out.println("not tile");
+            System.out.println("not tile");
         }
-
     }
 
     @Override
@@ -100,25 +100,28 @@ public class SimulatorLogic extends UniversalAdapter{
         try {
             Component current = this.board.getComponentAt(e.getX(), e.getY());
             endTile = this.board.findTile((Tile) current);
-            for (Direction direction : Direction.values()) {
-                if (endTile.getNeighbours().containsKey(direction)) {
-                    if (Objects.equals(endTile.getNeighbours().get(direction).getTile(), startTile)) {
-                        if (!endTile.getNeighbours().get(direction).isConnected()) {
-                            endTile.connectBothWays(direction);
-                        } else {
-                            endTile.disconnectBothWays(direction);
-                        }
+            connectTiles();
+        }catch(Exception i){
+            System.out.println("not tile");
+        }
+    }
+    void connectTiles(){
+        for (Direction direction : Direction.values()) {
+            if (endTile.getNeighbours().containsKey(direction)) {
+                if (Objects.equals(endTile.getNeighbours().get(direction).getTile(), startTile)) {
+                    if (!endTile.getNeighbours().get(direction).isConnected()) {
+                        endTile.connectBothWays(direction);
+                    } else {
+                        endTile.disconnectBothWays(direction);
                     }
                 }
             }
-            //testStartAndEnd(startTile, endTile);
-            endTile = null;
-            startTile = null;
-            CheckConnectionLogic.setFlagForIncorrectConnections(board);
-            this.board.repaint();
-        }catch(Exception i){
-            //System.out.println("not tile");
         }
+        //testStartAndEnd(startTile, endTile);
+        endTile = null;
+        startTile = null;
+        CheckConnectionLogic.setFlagForIncorrectConnections(board);
+        this.board.repaint();
     }
     void test(Tile current){
         this.board.TestStatus(current);

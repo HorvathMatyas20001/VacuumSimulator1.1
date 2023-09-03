@@ -34,7 +34,13 @@ public class Save extends UniversalAdapter {
 
     }
 
-    public static void saveBoardToJson(Board board, String path)/*throws JSException, IOException */{
+    public static void saveBoardToJson(Board board, String path){
+        if (board == null) {
+            System.out.println("No board to save.");
+            Runtime.Version version = Runtime.version();
+            System.out.println("java:" + version);
+            return;
+        }
         JSONObject jsonBoard = new JSONObject();
         JSONArray column = new JSONArray();
         for(int i = 0; i < board.getXDimension(); i++){
@@ -49,7 +55,7 @@ public class Save extends UniversalAdapter {
         try (FileWriter fileWriter = new FileWriter(path)) {
             fileWriter.write(jsonBoard.toString());
         }catch(Exception e){
-            System.out.println("trouble");
+            System.out.println("Failed to save board: " + e.getMessage());
         }
 
     }

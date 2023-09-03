@@ -113,13 +113,45 @@ public class Tile extends JPanel {
                 this.setBackground(Color.WHITE);
                 break;
         }
+        int tileWidth = (int) (this.getWidth() * 0.85);
+        int tileHeight = (int) (this.getHeight() * 0.85);
+        int tileX = (int) (this.getWidth() * 0.075);
+        int tileY = (int) (this.getHeight() * 0.075);
+        int cornerRadius = 30;
+
+        g.fillRoundRect(tileX,tileY,tileWidth,tileHeight,cornerRadius,cornerRadius);
+        g.setColor(Color.BLACK);
+        g.drawRoundRect(tileX,tileY,tileWidth,tileHeight,cornerRadius,cornerRadius);
+
         if(tooManyConnections || tooFewConnections){
             g.setColor(Color.RED);
+
+            // Calculate dimensions and position for the circle
+            int circleDiameter = Math.min(tileWidth, tileHeight) / 4;
+            int circleX = tileX + (tileWidth * 6/7)  - circleDiameter / 2;
+            int circleY = tileY + tileHeight / 4 - circleDiameter / 2;
+
+            // Draw red circle
+            g.fillOval(circleX, circleY, circleDiameter, circleDiameter);
+            g.setColor(Color.WHITE);
+            g.drawOval(circleX, circleY, circleDiameter, circleDiameter);
+
+            //C:\Users\mutyi\OneDrive\Desktop\5.json
+            int exclamationSize = circleDiameter * 2 / 3;
+            Font exclamationFont = new Font("Arial", Font.BOLD, exclamationSize);
+
+            g.setFont(exclamationFont);
+            FontMetrics fontMetrics = g.getFontMetrics(exclamationFont);
+            int exclamationWidth = fontMetrics.stringWidth("!");
+            int exclamationHeight = fontMetrics.getHeight();
+
+            int exclamationX = circleX + (circleDiameter / 2) - (exclamationWidth / 2);
+            int exclamationY = circleY + (circleDiameter / 2) + (exclamationHeight /3);
+
+            g.drawString("!", exclamationX, exclamationY);
         }
 
-        g.fillRoundRect((int) (0 + this.getWidth() * 0.075),(int) (0 + this.getHeight() * 0.075),(int) (this.getWidth() * 0.85),(int) (this.getHeight() * 0.85),30,30);
-        g.setColor(Color.BLACK);
-        g.drawRoundRect((int) (0 + this.getWidth() * 0.075),(int) (0 + this.getHeight() * 0.075),(int) (this.getWidth() * 0.85),(int) (this.getHeight() * 0.85),30,30);
+
     }
 
     public int getNumberOfConnections() {

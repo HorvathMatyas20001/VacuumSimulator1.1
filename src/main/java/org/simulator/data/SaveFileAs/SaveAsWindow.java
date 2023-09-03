@@ -138,6 +138,10 @@ public class SaveAsWindow extends UniversalAdapter {
         return path;
     }
     private void creatNewFile(){
+        if (logic.getBoard() == null) {
+            System.out.println("No board to save.");
+            return;
+        }
         logic.setPath(pathField.getText());
         logic.getBoard().revalidate();
         logic.setPath(createPath());
