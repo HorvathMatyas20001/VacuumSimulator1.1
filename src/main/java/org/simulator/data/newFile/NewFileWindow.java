@@ -13,7 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static org.simulator.data.saveFile.Save.saveBoardToJson;
+//import static org.simulator.data.saveFile.Save.saveBoardToJson;
 
 
 public class NewFileWindow extends UniversalAdapter {
@@ -203,7 +203,7 @@ public class NewFileWindow extends UniversalAdapter {
         logic.getMainFrame().add(board);
         logic.getBoard().revalidate();
         logic.setPath(createPath());
-        saveBoardToJson(board,createPath());
+        //saveBoardToJson(board,createPath());
         testPath();
     }
     private void browseFiles(){

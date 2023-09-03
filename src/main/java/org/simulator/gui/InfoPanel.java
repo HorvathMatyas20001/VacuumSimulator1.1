@@ -1,7 +1,5 @@
 package org.simulator.gui;
 
-import org.simulator.board.Tile;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -38,25 +36,25 @@ public class InfoPanel extends JPanel {
         basicInfoTextArea.setText("Basic Information:\n\n- Type: \n- Active: \n- Max Connection: \n- Min Connection: ");
         errorInfoTextArea.setText("Errors:\n\n");
     }
-    public  void updateInfoPanel(Tile tile){
-        updateInfoText(tile);
-        updateErrorText(tile);
-    }
-    private void updateInfoText(Tile tile){
-        basicInfoTextArea.setText("Basic Information:\n\n- Type: " + tile.getStateType()
-                +"\n- Active: " + tile.getStateType().isActiveElement()
-                +"\n- Max Connection: " + tile.getStateType().getMaxConnections()
-                +"\n- Min Connection: " + tile.getStateType().getMinConnections());
-    }
-    private void updateErrorText(Tile tile){
-        String connectionErrorText = new String();
-        if(tile.isTooFewConnections()){
-            connectionErrorText = "the current component has\n too few connections";
-        }else if(tile.isTooManyConnections()){
-            connectionErrorText = "the current component has\n too many connections";
-        }
-        errorInfoTextArea.setText("Errors:\n\n"+ connectionErrorText);
-    }
+//    public  void updateInfoPanel(Tile tile){
+//        updateInfoText(tile);
+//        updateErrorText(tile);
+//    }
+//    private void updateInfoText(Tile tile){
+//        basicInfoTextArea.setText("Basic Information:\n\n- Type: " + tile.getStateType()
+//                +"\n- Active: " + tile.getStateType().isActiveElement()
+//                +"\n- Max Connection: " + tile.getStateType().getMaxConnections()
+//                +"\n- Min Connection: " + tile.getStateType().getMinConnections());
+//    }
+//    private void updateErrorText(Tile tile){
+//        String connectionErrorText = new String();
+//        if(tile.isTooFewConnections()){
+//            connectionErrorText = "the current component has\n too few connections";
+//        }else if(tile.isTooManyConnections()){
+//            connectionErrorText = "the current component has\n too many connections";
+//        }
+//        errorInfoTextArea.setText("Errors:\n\n"+ connectionErrorText);
+//    }
 
 
 

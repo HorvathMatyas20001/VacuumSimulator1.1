@@ -30,4 +30,5 @@ public enum StateType {
         this.activeElement = activeElement;
         this.color = color;
     }
+
 }

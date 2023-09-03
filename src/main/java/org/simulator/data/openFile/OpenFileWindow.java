@@ -1,12 +1,5 @@
 package org.simulator.data.openFile;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.simulator.board.Board;
-import org.simulator.board.Direction;
-import org.simulator.board.StateType;
-import org.simulator.controls.CheckConnectionLogic;
 import org.simulator.controls.SimulatorLogic;
 import org.simulator.controls.UniversalAdapter;
 
@@ -16,7 +9,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -72,7 +64,7 @@ public class OpenFileWindow extends UniversalAdapter {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == openButton) {
             if(isCorrectPath){
-                loadBoard();
+                //loadBoard();
                 window.dispose();
             }
 
@@ -86,18 +78,18 @@ public class OpenFileWindow extends UniversalAdapter {
     public void keyReleased(KeyEvent e) {
         pathValidation();
     }
-    public void loadBoard(){
-        System.out.println("here");
-        Board board = readInBoard();
-        board.addMouseListener(logic);
-        board.addMouseMotionListener(logic);
-        logic.setBoard(board);
-        logic.setPath(pathField.getText());
-        logic.getMainFrame().add(board);
-        logic.getBoard().revalidate();
-        logic.setPath(pathField.getText());
-
-    }
+//    public void loadBoard(){
+//        System.out.println("here");
+//        Board board = readInBoard();
+//        board.addMouseListener(logic);
+//        board.addMouseMotionListener(logic);
+//        logic.setBoard(board);
+//        logic.setPath(pathField.getText());
+//        logic.getMainFrame().add(board);
+//        logic.getBoard().revalidate();
+//        logic.setPath(pathField.getText());
+//
+//    }
     private FileFilter filter = new FileFilter() {
         @Override
         public boolean accept(File file) {
@@ -135,51 +127,51 @@ public class OpenFileWindow extends UniversalAdapter {
             pathValidation();
         }
     }
-    private Board readInBoard(){
-        try {
-            JSONObject jsonObject = new JSONObject(Files.readString(Paths.get(pathField.getText())));
-            JSONArray boardArray = jsonObject.getJSONArray("Board");
-
-            Board board = new Board(boardArray.length(), boardArray.getJSONArray(0).length());
-
-            loadComponents(boardArray,board);
-
-            loadConnections( boardArray,board);
-
-            return board;
-        } catch (IOException | JSONException e) {
-            e.printStackTrace();
-            // Handle the exception if the file cannot be read or if there is an error parsing the JSON data
-            return null;
-        }
-    }
-    private void loadComponents(JSONArray boardArray,Board board){
-        for (int i = 0; i < boardArray.length(); i++) {
-            JSONArray rowArray = boardArray.getJSONArray(i);
-            for (int j = 0; j < boardArray.getJSONArray(0).length(); j++) {
-                JSONObject tileObject = rowArray.getJSONObject(j);
-                board.getBoard()[i][j].setStateType(StateType.valueOf(tileObject.getString("State")));
-                board.connectWithNeighbours(i,j);
-            }
-        }
-    }
-    private void loadConnections(JSONArray boardArray,Board board){
-        for (int i = 0; i < boardArray.length(); i++) {
-            JSONArray rowArray = boardArray.getJSONArray(i);
-            for (int j = 0; j < boardArray.getJSONArray(0).length(); j++) {
-                JSONObject tileObject = rowArray.getJSONObject(j);
-                if (tileObject.has("neighbour")) {
-                    JSONObject neighborObject = tileObject.getJSONObject("neighbour");
-                    for (Direction direction : Direction.values()) {
-                        if (neighborObject.has(direction.name())) {
-                            boolean isConnected = neighborObject.getBoolean(direction.name());
-                            board.getBoard()[i][j].getNeighbours().get(direction).setConnected(isConnected);
-                        }
-                    }
-                }
-            }
-        }
-        CheckConnectionLogic.setFlagForIncorrectConnections(board);
-    }
+//    private Board readInBoard(){
+//        try {
+//            JSONObject jsonObject = new JSONObject(Files.readString(Paths.get(pathField.getText())));
+//            JSONArray boardArray = jsonObject.getJSONArray("Board");
+//
+//            Board board = new Board(boardArray.length(), boardArray.getJSONArray(0).length());
+//
+//            loadComponents(boardArray,board);
+//
+//            loadConnections( boardArray,board);
+//
+//            return board;
+//        } catch (IOException | JSONException e) {
+//            e.printStackTrace();
+//            // Handle the exception if the file cannot be read or if there is an error parsing the JSON data
+//            return null;
+//        }
+//    }
+//    private void loadComponents(JSONArray boardArray,Board board){
+//        for (int i = 0; i < boardArray.length(); i++) {
+//            JSONArray rowArray = boardArray.getJSONArray(i);
+//            for (int j = 0; j < boardArray.getJSONArray(0).length(); j++) {
+//                JSONObject tileObject = rowArray.getJSONObject(j);
+//                board.getBoard()[i][j].setStateType(StateType.valueOf(tileObject.getString("State")));
+//                board.connectTiles(i,j);
+//            }
+//        }
+//    }
+//    private void loadConnections(JSONArray boardArray,Board board){
+//        for (int i = 0; i < boardArray.length(); i++) {
+//            JSONArray rowArray = boardArray.getJSONArray(i);
+//            for (int j = 0; j < boardArray.getJSONArray(0).length(); j++) {
+//                JSONObject tileObject = rowArray.getJSONObject(j);
+//                if (tileObject.has("neighbour")) {
+//                    JSONObject neighborObject = tileObject.getJSONObject("neighbour");
+//                    for (Direction direction : Direction.values()) {
+//                        if (neighborObject.has(direction.name())) {
+//                            boolean isConnected = neighborObject.getBoolean(direction.name());
+//                            board.getBoard()[i][j].getNeighbours().get(direction).setConnected(isConnected);
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//        CheckConnectionLogic.setFlagForIncorrectConnections(board);
+//    }
 
 }

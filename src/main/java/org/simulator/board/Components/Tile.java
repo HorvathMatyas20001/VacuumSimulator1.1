@@ -1,5 +1,6 @@
 package org.simulator.board.Components;
 
+import lombok.Getter;
 import org.simulator.board.Direction;
 import org.simulator.board.StateType;
 
@@ -9,14 +10,13 @@ import java.util.EnumMap;
 
 public abstract class Tile extends JPanel {
     protected EnumMap<Direction, Boolean> connections;
+    @Getter
 
     protected final StateType stateType;
 
     protected final int maxConnection;
     protected final int minConnection;
-
     protected final Color color;
-
     protected Tile(StateType stateType, int maxConnection, int minConnection, Color color) {
         this.stateType = stateType;
         this.maxConnection = maxConnection;
