@@ -45,21 +45,19 @@ public class SimulatorLogic extends UniversalAdapter{
     private void paintTile(MouseEvent e){
         try {
             Component current = this.board.getComponentAt(e.getX(), e.getY());
-            if (drawType != StateType.NONE && drawType != this.board.findTile((Tile) current).getStateType()) {
-                this.board.changeTile((Tile) current, drawType);
+            Tile temp = (Tile)current;
+            if (drawType != StateType.NONE && drawType != temp.getStateType()) {
+                this.board.replaceTile((Tile) current, drawType);
             }
-            //CheckConnectionLogic.setFlagForIncorrectConnections(board);
             this.board.repaint();
         }catch(Exception i){
             System.out.println("not tile");
         }
     }
     private void getComponentInfo(MouseEvent e){
-        //this.board.repaint();
         try{
             Component current = this.board.getComponentAt(e.getX(), e.getY());
-            Tile temp = (Tile)current;
-            //infoPanel.updateInfoPanel(temp);
+            infoPanel.updateInfoPanel((Tile)current);
         }catch(ClassCastException i){
             System.out.println("not tile");
         }
@@ -69,7 +67,7 @@ public class SimulatorLogic extends UniversalAdapter{
     public void mouseMoved(MouseEvent e){
         try{
             Component current = this.board.getComponentAt(e.getX(),e.getY());
-            //this.board.TestStatus((Tile) current);
+            this.board.TestStatus((Tile) current);
             //test((Tile) current);
         }catch(Exception i){
             System.out.println("not a tile");
@@ -87,7 +85,7 @@ public class SimulatorLogic extends UniversalAdapter{
     public void mousePressed(MouseEvent e) {
         try{
             Component current = this.board.getComponentAt(e.getX(), e.getY());
-            startTile = this.board.findTile((Tile) current);
+            startTile = (Tile) current;
         }catch(Exception i){
             System.out.println("not tile");
         }
@@ -97,38 +95,24 @@ public class SimulatorLogic extends UniversalAdapter{
     public void mouseReleased(MouseEvent e) {
         try {
             Component current = this.board.getComponentAt(e.getX(), e.getY());
-            endTile = this.board.findTile((Tile) current);
-            //connectTiles();
+            endTile = (Tile) current;
+            this.board.smartTileConnectDisconnect(startTile,endTile);
+            endTile = null;
+            startTile = null;
+            this.board.repaint();
         }catch(Exception i){
             System.out.println("not tile");
         }
     }
-//    void connectTiles(){
-//        for (Direction direction : Direction.values()) {
-//            if (endTile.getNeighbours().containsKey(direction)) {
-//                if (Objects.equals(endTile.getNeighbours().get(direction).getTile(), startTile)) {
-//                    if (!endTile.getNeighbours().get(direction).isConnected()) {
-//                        endTile.connectBothWays(direction);
-//                    } else {
-//                        endTile.disconnectBothWays(direction);
-//                    }
-//                }
-//            }
-//        }
-//        //testStartAndEnd(startTile, endTile);
-//        endTile = null;
-//        startTile = null;
-//        CheckConnectionLogic.setFlagForIncorrectConnections(board);
-//        this.board.repaint();
-//    }
-//    void test(Tile current){
-//        this.board.TestStatus(current);
-//        System.out.println("mode: " + mode);
-//    }
-//    void testStartAndEnd(Tile startTile,Tile endTile){
-//        System.out.println("start:");
-//        this.board.TestStatus(startTile);
-//        System.out.println("end:");
-//        this.board.TestStatus(endTile);
-//    }
+
+    void test(Tile current){
+        this.board.TestStatus(current);
+        System.out.println("mode: " + mode);
+    }
+    void testStartAndEnd(Tile startTile,Tile endTile){
+        System.out.println("start:");
+        this.board.TestStatus(startTile);
+        System.out.println("end:");
+        this.board.TestStatus(endTile);
+    }
 }

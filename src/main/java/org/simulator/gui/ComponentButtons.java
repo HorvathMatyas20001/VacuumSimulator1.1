@@ -36,6 +36,7 @@ public class ComponentButtons extends JButton implements ActionListener{
         if(this.logic.getBoard() != null){
             if(this.logic.getDrawType() != this.type){
                 this.logic.setDrawType(this.type);
+                System.out.println("the draw type is :" + this.type);
             }else{
                 this.logic.setDrawType(StateType.NONE);
             }
@@ -49,7 +50,7 @@ public class ComponentButtons extends JButton implements ActionListener{
         int w = getWidth();
         int h = getHeight();
         g.setColor(type.getColor());
-        g.fillRect(0, 0, w * 2 / 10, h);
+        g.fillRect(0, 0, w , h);
         g.setColor(Color.BLACK);
         FontMetrics metrics = g.getFontMetrics();
         int textWidth = metrics.stringWidth(text);

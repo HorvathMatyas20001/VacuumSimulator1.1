@@ -1,16 +1,17 @@
 package org.simulator.board;
 
 import lombok.Getter;
-import org.simulator.board.Components.*;
+import org.simulator.board.Components.Empty;
+import org.simulator.board.Components.Tile;
 import org.simulator.controls.Mode;
 
 import javax.swing.*;
 import java.awt.*;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
 
 
 public class Board extends JPanel{
-    @Getter
     private Tile[][] board;
     @Getter
     private int xDimension;
@@ -30,7 +31,15 @@ public class Board extends JPanel{
         this.setLayout(new GridLayout(xDimension,yDimension));
         for (int i = 0; i < xDimension; i++){
             for(int j = 0; j < yDimension; j++){
-                this.board[i][j] = new Empty();
+                this.board[i][j] = new Empty(i,j);
+                this.add(this.board[i][j]);
+            }
+        }
+    }
+    private void reloadBoard(){
+        this.removeAll();
+        for (int i = 0; i < xDimension; i++){
+            for(int j = 0; j < yDimension; j++){
                 this.add(this.board[i][j]);
             }
         }
@@ -45,100 +54,75 @@ public class Board extends JPanel{
                 break;
         }
     }
-    public void replace(int x,int y,StateType stateType){
-        switch (stateType) {
-            case CHAMBER -> this.board[x][y] = new Chamber();
-            case EMPTY -> this.board[x][y] = new Empty();
-            case FORE_VACUUM_PUMP -> this.board[x][y] = new ForeVacuumPump();
-            case GAUGE -> this.board[x][y] = new Gauge();
-            case HV_PUMP -> this.board[x][y] = new HVPump();
-            case NONE -> this.board[x][y] = new None();
-            case PIPE -> this.board[x][y] = new Pipe();
-            case PUMP_STAND -> this.board[x][y] = new PumpStand();
-            case VALVE -> this.board[x][y] = new Valve();
-            case VENTING_VALVE -> this.board[x][y] = new VentingValve();
+    public void replaceTile(Tile tile, StateType stateType){
+        int coordinateX = tile.getXCoordinate();
+        int coordinateY = tile.getYCoordinate();
+        try {
+            // Create a new instance of the specified class based on StateType, still black magic
+            Class<? extends Tile> tileClass = stateType.getTileClass();
+            Tile newTile = tileClass.getDeclaredConstructor(int.class, int.class).newInstance(coordinateX, coordinateY);
+
+            this.board[coordinateX][coordinateY] = newTile;
+
+            disconnect(coordinateX, coordinateY);
+            reloadBoard();
+            this.revalidate();
+            this.repaint();
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            e.printStackTrace();
         }
-        this.repaint();
     }
-    public void changeTile(Tile tile, StateType stateType){
+    public void smartTileConnectDisconnect(Tile tile1, Tile tile2){
+        int dx = tile2.getXCoordinate() - tile1.getXCoordinate();
+        int dy = tile2.getYCoordinate() - tile1.getYCoordinate();
+        if(tile1.getStateType() == StateType.EMPTY || tile2.getStateType() == StateType.EMPTY){
+            return;
+        }
+        if (dx == 1 && dy == 0) {
+            tile1.getConnections().put(Direction.DOWN,!tile1.getConnections().get(Direction.DOWN));
+            tile2.getConnections().put(Direction.UP,!tile2.getConnections().get(Direction.UP));
+        } else if (dx == -1 && dy == 0) {
+            tile1.getConnections().put(Direction.UP,!tile1.getConnections().get(Direction.UP));
+            tile2.getConnections().put(Direction.DOWN,!tile2.getConnections().get(Direction.DOWN));
+        } else if (dx == 0 && dy == 1) {
+            tile1.getConnections().put(Direction.RIGHT,!tile1.getConnections().get(Direction.RIGHT));
+            tile2.getConnections().put(Direction.LEFT,!tile2.getConnections().get(Direction.LEFT));
+        } else if (dx == 0 && dy == -1) {
+            tile1.getConnections().put(Direction.LEFT,!tile1.getConnections().get(Direction.LEFT));
+            tile2.getConnections().put(Direction.RIGHT,!tile2.getConnections().get(Direction.RIGHT));
+        }
+    }
+    private void disconnect(int coordinateX, int coordinateY){
+        if (coordinateX != 0 ) {
+            this.board[coordinateX - 1][coordinateY].getConnections().put(Direction.DOWN,false);
+        }
+        if (coordinateX < xDimension-1) {
+            this.board[coordinateX + 1][coordinateY].getConnections().put(Direction.UP,false);
+        }
+        if (coordinateY != 0){
+            this.board[coordinateX][coordinateY - 1].getConnections().put(Direction.RIGHT,false);
+        }
+        if (coordinateY < yDimension-1) {
+            this.board[coordinateX][coordinateY + 1].getConnections().put(Direction.LEFT,false);
+        }
+    }
+    public void TestStatus(Tile tile){
         for(int x = 0; x < this.xDimension; x++){
-            for(int y = 0; y <this.yDimension; y++){
+            for(int y = 0; y < this.yDimension; y++){
                 if(Objects.equals(this.board[x][y], tile)){
-                    if(stateType == StateType.EMPTY){
-                        disconnectTiles(x,y);
-                    }else{
-                        connectTiles(x,y);
+                    System.out.println("x:" + x +"; y:" + y);
+                    System.out.println("type:" + this.board[x][y].getStateType());
+                    int connectionCounter = 0;
+                    for(Direction direction : Direction.values()){
+                        if(this.board[x][y].getConnections().get(direction)){
+                            connectionCounter++;
+                        }
                     }
-                    replace(x,y,stateType);
+                    System.out.println("number of connections: " + connectionCounter);
+
                     return;
                 }
             }
         }
     }
-    public void connectTiles(int x, int y){
-        if (x != 0 && !(this.board[x - 1][y].getStateType() == StateType.EMPTY)) {
-            this.board[x][y].connectTile(Direction.UP);
-            this.board[x - 1][y].connectTile(Direction.DOWN);
-        }
-        if (x != xDimension - 1 && !(this.board[x + 1][y].getStateType() == StateType.EMPTY)) {
-            this.board[x][y].connectTile(Direction.DOWN);
-            this.board[x + 1][y].connectTile(Direction.UP);
-        }
-        if (y != 0 && !(this.board[x][y - 1].getStateType() == StateType.EMPTY)){
-            this.board[x][y].connectTile(Direction.LEFT);
-            this.board[x][y - 1].connectTile(Direction.RIGHT);
-        }
-        if (y != yDimension - 1 && !(this.board[x][y + 1].getStateType() == StateType.EMPTY)) {
-            this.board[x][y].connectTile(Direction.RIGHT);
-            this.board[x][y + 1].connectTile(Direction.LEFT);
-        }
-    }
-    public void disconnectTiles(int x, int y){
-        if (x != 0 && !(this.board[x - 1][y].getStateType() == StateType.EMPTY)) {
-            this.board[x][y].disconnectTile(Direction.UP);
-            this.board[x - 1][y].disconnectTile(Direction.DOWN);
-        }
-        if (x != xDimension - 1 && !(this.board[x + 1][y].getStateType() == StateType.EMPTY)) {
-            this.board[x][y].disconnectTile(Direction.DOWN);
-            this.board[x + 1][y].disconnectTile(Direction.UP);
-        }
-        if (y != 0 && !(this.board[x][y - 1].getStateType() == StateType.EMPTY)){
-            this.board[x][y].disconnectTile(Direction.LEFT);
-            this.board[x][y - 1].disconnectTile(Direction.RIGHT);
-        }
-        if (y != yDimension - 1 && !(this.board[x][y + 1].getStateType() == StateType.EMPTY)) {
-            this.board[x][y].disconnectTile(Direction.RIGHT);
-            this.board[x][y + 1].disconnectTile(Direction.LEFT);
-        }
-    }
-    public Tile findTile(Tile tile){
-        for(int x = 0; x < this.xDimension; x++){
-            for(int y = 0; y < this.yDimension; y++){
-                if(Objects.equals(this.board[x][y], tile)){
-                    return this.board[x][y];
-                }
-            }
-        }
-        return null;
-    }
-//    public void TestStatus(Tile tile){
-//        for(int x = 0; x < this.xDimension; x++){
-//            for(int y = 0; y < this.yDimension; y++){
-//                if(Objects.equals(this.board[x][y], tile)){
-//                    System.out.println("x:" + x +"; y:" + y);
-//                    System.out.println("type:" + this.board[x][y].getStateType());
-//                    int numberOfCon = 0;
-//                    for(Direction direction : Direction.values()){
-//                        if( this.board[x][y].getNeighbours().containsKey(direction)){
-//                            if(this.board[x][y].getNeighbours().get(direction).isConnected())
-//                            numberOfCon++;
-//                        }
-//                    }
-//                    System.out.println("number of connections: " + numberOfCon);
-//
-//                    return;
-//                }
-//            }
-//        }
-//    }
 }

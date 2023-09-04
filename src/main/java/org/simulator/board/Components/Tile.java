@@ -9,6 +9,7 @@ import java.awt.*;
 import java.util.EnumMap;
 
 public abstract class Tile extends JPanel {
+    @Getter
     protected EnumMap<Direction, Boolean> connections;
     @Getter
 
@@ -16,12 +17,15 @@ public abstract class Tile extends JPanel {
 
     protected final int maxConnection;
     protected final int minConnection;
-    protected final Color color;
-    protected Tile(StateType stateType, int maxConnection, int minConnection, Color color) {
+    @Getter
+    protected int xCoordinate;
+    @Getter
+    protected int yCoordinate;
+    protected Tile(StateType stateType, int minConnection, int maxConnection) {
         this.stateType = stateType;
-        this.maxConnection = maxConnection;
         this.minConnection = minConnection;
-        this.color = color;
+        this.maxConnection = maxConnection;
+
     }
     protected void initializeConnection(){
         connections = new EnumMap<>(Direction.class);
@@ -49,12 +53,6 @@ public abstract class Tile extends JPanel {
         return connectionCounter < minConnection;
     }
 
-    public void connectTile(Direction direction){
-        connections.put(direction, true);
-    }
-    public void disconnectTile(Direction direction){
-        connections.put(direction, false);
-    }
     protected void paintConnections(Graphics g){
         g.setColor(Color.BLACK);
         if(this.connections.get(Direction.UP)) {
@@ -71,7 +69,7 @@ public abstract class Tile extends JPanel {
         }
     }
     protected void paintComponentBody(Graphics g ,int tileWidth, int tileHeight, int tileX, int tileY){
-        g.setColor(this.color);
+        g.setColor(this.stateType.getColor());
         int cornerRadius = 30;
 
         g.fillRoundRect(tileX,tileY,tileWidth,tileHeight,cornerRadius,cornerRadius);
@@ -92,7 +90,6 @@ public abstract class Tile extends JPanel {
             g.setColor(Color.WHITE);
             g.drawOval(circleX, circleY, circleDiameter, circleDiameter);
 
-            //C:\Users\mutyi\OneDrive\Desktop\5.json
             int exclamationSize = circleDiameter * 2 / 3;
             Font exclamationFont = new Font("Arial", Font.BOLD, exclamationSize);
 
@@ -107,13 +104,14 @@ public abstract class Tile extends JPanel {
             g.drawString("!", exclamationX, exclamationY);
         }
     }
-    public void paintComponent(Graphics g){
+    protected void paintComponent(Graphics g){
         super.paintComponent(g);
 
         int tileWidth = (int) (this.getWidth() * 0.85);
         int tileHeight = (int) (this.getHeight() * 0.85);
         int tileX = (int) (this.getWidth() * 0.075);
         int tileY = (int) (this.getHeight() * 0.075);
+        setBackground(Color.white);
 
         paintConnections(g);
 
