@@ -32,6 +32,7 @@ public class InfoPanel extends JPanel {
         infoPanel.add(errorLogScrollPane, BorderLayout.CENTER);
 
         // Add the main panel to the JFrame
+        this.setBackground(Color.LIGHT_GRAY);
         this.add(infoPanel);
 
         // Update the text areas with some example content

@@ -3,10 +3,10 @@ package org.simulator.gui;
 import org.simulator.board.StateType;
 import org.simulator.controls.Exit;
 import org.simulator.controls.SimulatorLogic;
+import org.simulator.data.SaveFileAs.SaveAsCreator;
 import org.simulator.data.newFile.NewFileCreator;
 import org.simulator.data.openFile.OpenFileCreator;
 import org.simulator.data.saveFile.Save;
-import org.simulator.data.SaveFileAs.SaveAsCreator;
 
 import javax.swing.*;
 import java.awt.*;
@@ -62,9 +62,14 @@ public class Simulator {
 
         for (StateType stateType: StateType.values()) {
             if(stateType != StateType.NONE) {
-                sideMenu.add(new ComponentButtons(logic, stateType, componentButtonsList));
+                ComponentButtons componentButtons = new ComponentButtons(logic, stateType);
+                componentButtonsList.add(componentButtons);
+                sideMenu.add(componentButtons);
+
             }
         }
+        logic.setComponentButtonsList(componentButtonsList);
+
 
         frame.add(sideMenu, BorderLayout.LINE_END);
         frame.add(logic.getInfoPanel(),BorderLayout.LINE_START);

@@ -5,11 +5,14 @@ import lombok.Setter;
 import org.simulator.board.Board;
 import org.simulator.board.Components.Tile;
 import org.simulator.board.StateType;
+import org.simulator.gui.ComponentButtons;
 import org.simulator.gui.InfoPanel;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class SimulatorLogic extends UniversalAdapter{
@@ -27,6 +30,8 @@ public class SimulatorLogic extends UniversalAdapter{
     private String path;
     @Getter
     private final InfoPanel infoPanel;
+    @Setter
+    private List<ComponentButtons> componentButtonsList;
 
     public SimulatorLogic(JFrame mainFrame){
         this.drawType = StateType.NONE;
@@ -36,6 +41,7 @@ public class SimulatorLogic extends UniversalAdapter{
         this.startTile = null;
         this.endTile = null;
         infoPanel = new InfoPanel();
+        componentButtonsList = new ArrayList<>();
     }
     public void changeMode(Mode mode){
         this.board.changeBoardMode(mode);
@@ -61,6 +67,16 @@ public class SimulatorLogic extends UniversalAdapter{
         }catch(ClassCastException i){
             System.out.println("not tile");
         }
+    }
+    public void updateButtons(){
+        System.out.println("here");
+        for(ComponentButtons buttons : componentButtonsList){
+            buttons.updateButton(false);
+            if(buttons.getType() == drawType){
+                buttons.setActiveToggle(true);
+            }
+        }
+
     }
     //mouseMoved is only for testing
     @Override
