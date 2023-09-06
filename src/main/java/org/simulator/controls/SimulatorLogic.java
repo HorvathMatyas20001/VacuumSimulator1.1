@@ -120,7 +120,6 @@ public class SimulatorLogic extends UniversalAdapter{
             System.out.println("not tile");
         }
     }
-
     void test(Tile current){
         this.board.TestStatus(current);
         System.out.println("mode: " + mode);

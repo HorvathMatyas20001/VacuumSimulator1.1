@@ -14,8 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Simulator {
-    private SimulatorLogic logic;
-    private List<ComponentButtons> componentButtonsList;
 
     public Simulator(){
         JFrame frame = new JFrame("Vacuum Simulator");
@@ -24,7 +22,7 @@ public class Simulator {
         frame.getContentPane().setBackground(Color.GRAY);
         //frame.pack();
 
-        logic = new SimulatorLogic(frame);
+        SimulatorLogic logic = new SimulatorLogic(frame);
         frame.addKeyListener(logic);
 
         JMenuBar menuBar = new JMenuBar();
@@ -54,25 +52,43 @@ public class Simulator {
 
         JPanel sideMenu = new JPanel();
         sideMenu.setBackground(Color.LIGHT_GRAY);
-        sideMenu.setLayout(new GridLayout(10, 1));
-        JLabel componentLabel = new JLabel("Components");
-        sideMenu.add(componentLabel);
+        sideMenu.setLayout(new BorderLayout());
 
-        componentButtonsList = new ArrayList<>();
+        JPanel labelPanel = new JPanel();
+        labelPanel.setBackground(Color.LIGHT_GRAY);
+        labelPanel.setLayout(new BoxLayout(labelPanel, BoxLayout.X_AXIS));
+        JLabel componentLabel = new JLabel("Components");
+        labelPanel.add(Box.createHorizontalGlue()); // Pushes the label to the left
+        labelPanel.add(componentLabel);
+        labelPanel.add(Box.createHorizontalGlue());
+
+        // Set the maximum height of the labelPanel to make it thinner
+        labelPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
+
+        // Add labelPanel to the top (LINE_END)
+        sideMenu.add(labelPanel, BorderLayout.PAGE_START);
+
+        List<ComponentButtons> componentButtonsList = new ArrayList<>();
+
+        JPanel buttonsPanel = new JPanel();
+        buttonsPanel.setBackground(Color.LIGHT_GRAY);
+        buttonsPanel.setLayout(new GridLayout(0, 1)); // Vertical layout for buttons
 
         for (StateType stateType: StateType.values()) {
             if(stateType != StateType.NONE) {
                 ComponentButtons componentButtons = new ComponentButtons(logic, stateType);
                 componentButtonsList.add(componentButtons);
-                sideMenu.add(componentButtons);
-
+                buttonsPanel.add(componentButtons);
             }
         }
+
+        // Add buttonsPanel under labelPanel
+        sideMenu.add(buttonsPanel, BorderLayout.CENTER);
+
         logic.setComponentButtonsList(componentButtonsList);
 
-
         frame.add(sideMenu, BorderLayout.LINE_END);
-        frame.add(logic.getInfoPanel(),BorderLayout.LINE_START);
+        frame.add(logic.getInfoPanel(), BorderLayout.LINE_START);
         frame.setVisible(true);
     }
 }
