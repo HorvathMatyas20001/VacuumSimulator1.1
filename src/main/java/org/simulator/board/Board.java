@@ -12,11 +12,12 @@ import java.util.Objects;
 
 
 public class Board extends JPanel{
+    @Getter
     private Tile[][] board;
     @Getter
-    private int xDimension;
+    private final int xDimension;
     @Getter
-    private int yDimension;
+    private final int yDimension;
 
     public Board(int xDimension,int yDimension){
         this.xDimension = xDimension;
@@ -36,7 +37,7 @@ public class Board extends JPanel{
             }
         }
     }
-    private void reloadBoard(){
+    public void reloadBoard(){
         this.removeAll();
         for (int i = 0; i < xDimension; i++){
             for(int j = 0; j < yDimension; j++){
@@ -44,14 +45,11 @@ public class Board extends JPanel{
             }
         }
     }
+    //this method is for further development and will be useful when the simulation part of the project is added
     public void changeBoardMode(Mode mode){
-        switch(mode) {
-            case DRAW_MODE:
-                this.setBackground(Color.WHITE);
-                break;
-            case NONE:
-                this.setBackground(Color.WHITE);
-                break;
+        switch (mode) {
+            case DRAW_MODE -> this.setBackground(Color.WHITE);
+            case SIMULATION_MODE -> this.setBackground(Color.GRAY);
         }
     }
     public void replaceTile(Tile tile, StateType stateType){

@@ -12,10 +12,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import static org.simulator.data.saveFile.Save.saveBoardToJson;
+
 public class SaveAsWindow extends UniversalAdapter {
     private final SimulatorLogic logic;
     private final JFrame window;
-    private JTextField fileNameField, pathField;
+    private final JTextField fileNameField, pathField;
     private final JButton createButton, cancelButton, browseButton;
     private boolean isCorrectFileName, isCorrectPath;
 
@@ -143,7 +145,7 @@ public class SaveAsWindow extends UniversalAdapter {
         logic.setPath(pathField.getText());
         logic.getBoard().revalidate();
         logic.setPath(createPath());
-        //saveBoardToJson(logic.getBoard(),createPath());
+        saveBoardToJson(logic.getBoard(),createPath());
         testPath();
     }
     private void browseFiles(){

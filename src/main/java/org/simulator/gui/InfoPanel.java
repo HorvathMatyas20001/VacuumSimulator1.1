@@ -6,8 +6,8 @@ import javax.swing.*;
 import java.awt.*;
 
 public class InfoPanel extends JPanel {
-    private JTextArea basicInfoTextArea;
-    private JTextArea errorInfoTextArea;
+    private final JTextArea basicInfoTextArea;
+    private final JTextArea errorInfoTextArea;
 
     public InfoPanel(){
         setSize(600, 400);
@@ -50,7 +50,7 @@ public class InfoPanel extends JPanel {
                 +"\n- Min Connection: " + tile.getStateType().getMinConnections());
     }
     private void updateErrorText(Tile tile){
-        String connectionErrorText = new String();
+        String connectionErrorText = "";
         if(tile.tooFewConnectionCheck()){
             connectionErrorText = "the current component has\n too few connections";
         }else if(tile.tooManyConnectionCheck()){

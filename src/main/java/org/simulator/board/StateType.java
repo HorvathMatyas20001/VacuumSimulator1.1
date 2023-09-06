@@ -7,14 +7,14 @@ import java.awt.*;
 
 public enum StateType {
     EMPTY(0,0,false,Color.WHITE, Empty.class,"Remove"),
-    PIPE(2,4,false,Color.PINK, Pipe.class,"Pipe"),
-    CHAMBER(1,4,false,Color.CYAN, Chamber.class,"Chamber"),
+    PIPE(2,4,false,Color.LIGHT_GRAY, Pipe.class,"Pipe"),
+    CHAMBER(1,4,false,Color.GREEN, Chamber.class,"Chamber"),
     GAUGE(1,1,false,Color.MAGENTA, Gauge.class,"Gauge"),
-    HV_PUMP(2,2,true,Color.LIGHT_GRAY, HVPump.class,"H.V. Pump"),
-    PUMP_STAND(1,1,true,Color.DARK_GRAY, PumpStand.class,"Pump stand"),
-    FORE_VACUUM_PUMP(1,1,true,Color.BLACK, ForeVacuumPump.class,"Fore vacuum pump"),
-    VALVE(2,2,true,Color.YELLOW, Valve.class,"Valve"),
-    VENTING_VALVE(1,1,true,Color.ORANGE, VentingValve.class,"Venting valve"),
+    HV_PUMP(2,2,true,Color.YELLOW, HVPump.class,"H.V. Pump"),
+    PUMP_STAND(1,1,true,Color.ORANGE, PumpStand.class,"Pump stand"),
+    FORE_VACUUM_PUMP(1,1,true,Color.RED, ForeVacuumPump.class,"Fore vacuum pump"),
+    VALVE(2,2,true,Color.CYAN, Valve.class,"Valve"),
+    VENTING_VALVE(1,1,true,Color.BLUE, VentingValve.class,"Venting valve"),
     NONE(0,0,false,null, null,null);
     @Getter
     private final int minConnections;

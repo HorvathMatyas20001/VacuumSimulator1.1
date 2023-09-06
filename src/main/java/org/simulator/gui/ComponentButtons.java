@@ -13,9 +13,9 @@ import java.awt.event.ActionListener;
 
 
 public class ComponentButtons extends JButton implements ActionListener{
-    private SimulatorLogic logic;
+    private final SimulatorLogic logic;
     @Getter
-    private StateType type;
+    private final StateType type;
 
     int buttonWidth = 150;
     int buttonHeight = 40;

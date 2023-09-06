@@ -41,7 +41,7 @@ public abstract class Tile extends JPanel {
                 connectionCounter++;
             }
         }
-        return connectionCounter < maxConnection;
+        return connectionCounter > maxConnection;
     }
     public boolean tooFewConnectionCheck(){
         int connectionCounter = 0;
