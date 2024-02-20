@@ -98,8 +98,6 @@ public class OpenFileWindow extends UniversalAdapter {
         logic.getBoard().revalidate();
         logic.getBoard().reloadBoard();
         logic.setPath(pathField.getText());
-
-
     }
     private final FileFilter filter = new FileFilter() {
         @Override

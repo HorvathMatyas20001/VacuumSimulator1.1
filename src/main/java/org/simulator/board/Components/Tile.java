@@ -8,49 +8,42 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.EnumMap;
 
-public abstract class Tile extends JPanel {
+public abstract class Tile extends JPanel{
     @Getter
     protected EnumMap<Direction, Boolean> connections;
     @Getter
-
     protected final StateType stateType;
-
-    protected final int maxConnection;
-    protected final int minConnection;
     @Getter
     protected int xCoordinate;
     @Getter
     protected int yCoordinate;
-    protected Tile(StateType stateType, int minConnection, int maxConnection) {
-        this.stateType = stateType;
-        this.minConnection = minConnection;
-        this.maxConnection = maxConnection;
 
+    protected Tile(StateType stateType) {
+        this.stateType = stateType;
     }
-    protected void initializeConnection(){
+    protected void initializeConnections() {
         connections = new EnumMap<>(Direction.class);
-        connections.put(Direction.UP, false);
-        connections.put(Direction.DOWN, false);
-        connections.put(Direction.LEFT, false);
-        connections.put(Direction.RIGHT, false);
+        for (Direction directions : Direction.values()) {
+            connections.put(directions, false);
+        }
     }
-    public boolean tooManyConnectionCheck(){
+    private boolean tooManyConnectionCheck(){
         int connectionCounter = 0;
         for(Direction direction : Direction.values()){
             if(connections.get(direction)){
                 connectionCounter++;
             }
         }
-        return connectionCounter > maxConnection;
+        return connectionCounter > this.stateType.getMaxConnections();
     }
-    public boolean tooFewConnectionCheck(){
+    private boolean tooFewConnectionCheck(){
         int connectionCounter = 0;
         for(Direction direction : Direction.values()){
             if(connections.get(direction)){
                 connectionCounter++;
             }
         }
-        return connectionCounter < minConnection;
+        return connectionCounter < this.stateType.getMinConnections();
     }
 
     protected void paintConnections(Graphics g){
@@ -104,20 +97,67 @@ public abstract class Tile extends JPanel {
             g.drawString("!", exclamationX, exclamationY);
         }
     }
+    protected void drawTextAndRectangle(Graphics g, int tileWidth, int tileHeight,int tileX, int tileY) {
+        Font font = new Font("Arial", Font.PLAIN, 12);
+        g.setFont(font);
+
+        FontMetrics metrics = g.getFontMetrics();
+        int textWidth = metrics.stringWidth(this.stateType.getText());
+        int textX = tileX + (tileWidth * 3/7) ;
+        int textY = tileY + tileHeight / 4 ;
+
+        int whiteRectX = textX - 5;
+        int whiteRectY = textY - metrics.getAscent() / 2 - 5;
+        int whiteRectWidth = textWidth + 10;
+        int whiteRectHeight = metrics.getHeight();
+        g.setColor(Color.WHITE);
+        g.fillRoundRect(whiteRectX, whiteRectY, whiteRectWidth, whiteRectHeight, 5, 5);
+
+        Graphics2D g2d = (Graphics2D) g;
+        g.setColor(Color.BLACK);
+        g2d.setStroke(new BasicStroke(2.0f));
+        g.drawRoundRect(whiteRectX, whiteRectY, whiteRectWidth, whiteRectHeight, 5, 5);
+
+        g.drawString(this.stateType.getText(), textX, textY);
+    }
     protected void paintComponent(Graphics g){
         super.paintComponent(g);
 
         int tileWidth = (int) (this.getWidth() * 0.85);
         int tileHeight = (int) (this.getHeight() * 0.85);
-        int tileX = (int) (this.getWidth() * 0.075);
-        int tileY = (int) (this.getHeight() * 0.075);
+        int XOffset = (int) (this.getWidth() * 0.075);
+        int YOffset = (int) (this.getHeight() * 0.075);
         setBackground(Color.white);
 
         paintConnections(g);
 
-        paintComponentBody(g,tileWidth,tileHeight,tileX,tileY);
+        paintComponentBody(g, tileWidth, tileHeight, XOffset, YOffset);
 
-        paintErrorMark(g,tileWidth,tileHeight,tileX,tileY);
+        paintErrorMark(g, tileWidth, tileHeight, XOffset, YOffset);
+
+        drawTextAndRectangle(g,30,30,XOffset,YOffset);
     }
-    abstract void action();
+
+    public void paintInfoPanelTile(Graphics g, int XOffset, int YOffset, int tileWidth, int tileHeight){
+        g.setColor(this.getStateType().getColor());
+        int cornerRadius = 30;
+
+        g.fillRoundRect(XOffset,YOffset,tileWidth,tileHeight,cornerRadius,cornerRadius);
+        g.setColor(Color.BLACK);
+        g.drawRoundRect(XOffset,YOffset,tileWidth,tileHeight,cornerRadius,cornerRadius);
+    }
+    private void paintInfoPanelCenter(Graphics g, int XOffset, int YOffset, int tileWidth, int tileHeight){
+
+    }
+    private void paintInfoPanelConnections(Graphics g, int XOffset, int YOffset, int tileWidth, int tileHeight){
+        if(this.connections.get(Direction.UP)) {
+        }
+        if(this.connections.get(Direction.DOWN)) {
+        }
+        if(this.connections.get(Direction.LEFT)) {
+        }
+        if(this.connections.get(Direction.RIGHT)) {
+        }
+    }
+
 }

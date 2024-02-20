@@ -1,15 +1,20 @@
 package org.simulator.board.Components;
 
+import lombok.Setter;
 import org.simulator.board.StateType;
 
-public class Valve extends Tile{
+public class Valve extends ActiveTile{
+    @Setter
+    private boolean isActive;
     public Valve(int xCoordinate, int yCoordinate){
-        super(StateType.VALVE,StateType.VALVE.getMinConnections(),StateType.VALVE.getMaxConnections());
+        super(StateType.VALVE);
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
-        initializeConnection();
+        initializeConnections();
     }
-    public void action(){
-
+    @Override
+    public void activate() {
+        isActive = !isActive;
+        //implementation needed.
     }
 }

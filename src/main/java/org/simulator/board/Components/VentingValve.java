@@ -1,15 +1,21 @@
 package org.simulator.board.Components;
 
+import lombok.Setter;
 import org.simulator.board.StateType;
 
-public class VentingValve extends Tile{
+public class VentingValve extends ActiveTile{
+    @Setter
+    private boolean isActive;
     public VentingValve(int xCoordinate, int yCoordinate){
-        super(StateType.VENTING_VALVE,StateType.VENTING_VALVE.getMinConnections(),StateType.VENTING_VALVE.getMaxConnections());
+        super(StateType.VENTING_VALVE);
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
-        initializeConnection();
+        initializeConnections();
     }
-    public void action(){
 
+    @Override
+    public void activate() {
+        isActive = !isActive;
+        //implementation needed.
     }
 }

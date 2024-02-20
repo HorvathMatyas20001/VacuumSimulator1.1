@@ -18,6 +18,10 @@ public class Simulator {
     public Simulator(){
         JFrame frame = new JFrame("Vacuum Simulator");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        frame.setSize(800, 600);
+        frame.setMinimumSize(new Dimension(700, 500));
+
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.getContentPane().setBackground(Color.GRAY);
         //frame.pack();

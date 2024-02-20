@@ -108,15 +108,15 @@ public class Board extends JPanel{
         for(int x = 0; x < this.xDimension; x++){
             for(int y = 0; y < this.yDimension; y++){
                 if(Objects.equals(this.board[x][y], tile)){
-                    System.out.println("x:" + x +"; y:" + y);
-                    System.out.println("type:" + this.board[x][y].getStateType());
+                    //System.out.println("x:" + x +"; y:" + y);
+                    //System.out.println("type:" + this.board[x][y].getStateType());
                     int connectionCounter = 0;
                     for(Direction direction : Direction.values()){
                         if(this.board[x][y].getConnections().get(direction)){
                             connectionCounter++;
                         }
                     }
-                    System.out.println("number of connections: " + connectionCounter);
+                    //System.out.println("number of connections: " + connectionCounter);
 
                     return;
                 }

@@ -53,52 +53,77 @@ public class ComponentButtons extends JButton implements ActionListener{
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+
         int w = getWidth();
         int h = getHeight();
 
-        // Calculate the new width and height
-        int newWidth = (int) (w * 0.95); // 5% smaller width
-        int newHeight = (int) (h * 0.95); // 5% smaller height
+        // Draw the background rounded rectangle
+        drawRoundedRectangle(g, w, h);
 
-        // Calculate the position to keep it centered
-        int x = (w - newWidth) / 2;
-        int y = (h - newHeight) / 2;
-
+        // Draw the text and the white rounded rectangle
+        drawTextAndRectangle(g, w, h);
+    }
+    private void drawRoundedRectangle(Graphics g, int width, int height) {
         Graphics2D g2d = (Graphics2D) g;
-        g2d.setStroke(new BasicStroke(4.0f)); // Adjust the thickness as needed
+        g2d.setStroke(new BasicStroke(6.0f));
+
+        int newWidth = (int) (width * 0.9);
+        int newHeight = (int) (height * 0.9);
+        int x = (width - newWidth) / 2;
+        int y = (height - newHeight) / 2;
 
         g.setColor(Color.GRAY);
-        g2d.drawRoundRect(x, y, newWidth, newHeight, 30, 30);
-        if(activeToggle){
-            g.setColor(type.getColor().darker());
-        }else{
+
+
+        if (activeToggle) {
+            g.setColor(Color.GREEN);
+            g2d.drawRoundRect(x, y, newWidth, newHeight, 30, 30);
+            g.setColor(type.getColor().darker().darker());
+
+        } else {
+            g2d.drawRoundRect(x, y, newWidth, newHeight, 30, 30);
             g.setColor(type.getColor());
+
         }
+
         g2d.fillRoundRect(x, y, newWidth, newHeight, 30, 30);
+    }
+
+    private void drawTextAndRectangle(Graphics g, int width, int height) {
+        Font font = new Font("Arial", Font.PLAIN, 12);
+        g.setFont(font);
 
         FontMetrics metrics = g.getFontMetrics();
         int textWidth = metrics.stringWidth(type.getText());
-        int textX = (w - textWidth) / 2;
-        int textY = (h - metrics.getHeight()) / 2 + metrics.getAscent();
+        if(this.type.getText().equals("Empty")){
+            textWidth = metrics.stringWidth("Remove");
+        }
 
-        // Calculate the position for the white rounded rectangle based on text position
-        int whiteRectX = textX - 5; // Adjust as needed
-        int whiteRectY = textY - metrics.getAscent() / 2 - 5; // Adjust as needed (subtract 5 pixels)
-        int whiteRectWidth = textWidth + 10; // Adjust as needed
-        int whiteRectHeight = metrics.getHeight(); // Use metrics height
+        int textX = (width - textWidth) / 2;
+        int textY = (height - metrics.getHeight()) / 2 + metrics.getAscent();
 
-        // Draw the white rounded rectangle
-        if(activeToggle){
+        int whiteRectX = textX - 5;
+        int whiteRectY = textY - metrics.getAscent() / 2 - 5;
+        int whiteRectWidth = textWidth + 10;
+        int whiteRectHeight = metrics.getHeight();
+
+        if (activeToggle) {
             g.setColor(Color.GREEN);
-        }else{
+        } else {
             g.setColor(Color.WHITE);
         }
         g.fillRoundRect(whiteRectX, whiteRectY, whiteRectWidth, whiteRectHeight, 5, 5);
 
+        Graphics2D g2d = (Graphics2D) g;
+        g.setColor(Color.GRAY);
+        g2d.setStroke(new BasicStroke(2.0f));
+        g.drawRoundRect(whiteRectX, whiteRectY, whiteRectWidth, whiteRectHeight, 5, 5);
+
         g.setColor(Color.BLACK);
-        g.drawString(type.getText(), textX, textY);
-
-
+        if(this.type.getText().equals("Empty")){
+            g.drawString("Remove", textX, textY);
+        }else{
+            g.drawString(type.getText(), textX, textY);
+        }
     }
-
 }
