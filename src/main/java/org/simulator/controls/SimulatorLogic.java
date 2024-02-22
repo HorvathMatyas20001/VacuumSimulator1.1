@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.simulator.board.Board;
 import org.simulator.board.Components.Tile;
 import org.simulator.board.StateType;
+import org.simulator.data.openFile.Testloadboard;
 import org.simulator.gui.ComponentButtons;
 import org.simulator.gui.InfoPanel;
 
@@ -32,6 +33,8 @@ public class SimulatorLogic extends UniversalAdapter{
     private final InfoPanel infoPanel;
     @Setter
     private List<ComponentButtons> componentButtonsList;
+    //for testing
+    Testloadboard testloadboard;
 
     public SimulatorLogic(JFrame mainFrame){
         this.drawType = StateType.NONE;
@@ -42,6 +45,10 @@ public class SimulatorLogic extends UniversalAdapter{
         this.endTile = null;
         infoPanel = new InfoPanel();
         componentButtonsList = new ArrayList<>();
+
+        //for testing
+        this.testloadboard = new Testloadboard(this);
+        testCodeLoadBoard();
     }
     public void changeMode(Mode mode){
         this.board.changeBoardMode(mode);
@@ -86,7 +93,7 @@ public class SimulatorLogic extends UniversalAdapter{
             this.board.TestStatus((Tile) current);
             //test((Tile) current);
         }catch(Exception i){
-            System.out.println("not a tile");
+            //System.out.println("not a tile");
         }
     }
     @Override
@@ -129,5 +136,9 @@ public class SimulatorLogic extends UniversalAdapter{
         this.board.TestStatus(startTile);
         System.out.println("end:");
         this.board.TestStatus(endTile);
+    }
+    void testCodeLoadBoard(){
+        testloadboard.readInBoard();
+        testloadboard.loadBoard();
     }
 }

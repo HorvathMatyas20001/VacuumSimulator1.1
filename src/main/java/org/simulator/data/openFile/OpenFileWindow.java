@@ -88,7 +88,6 @@ public class OpenFileWindow extends UniversalAdapter {
         pathValidation();
     }
     public void loadBoard(){
-        System.out.println("here");
         Board board = readInBoard();
         board.addMouseListener(logic);
         board.addMouseMotionListener(logic);

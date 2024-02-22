@@ -146,10 +146,10 @@ public abstract class Tile extends JPanel{
         g.setColor(Color.BLACK);
         g.drawRoundRect(XOffset,YOffset,tileWidth,tileHeight,cornerRadius,cornerRadius);
     }
-    private void paintInfoPanelCenter(Graphics g, int XOffset, int YOffset, int tileWidth, int tileHeight){
+    public void paintInfoPanelCenter(Graphics g, int XOffset, int YOffset, int tileWidth, int tileHeight){
 
     }
-    private void paintInfoPanelConnections(Graphics g, int XOffset, int YOffset, int tileWidth, int tileHeight){
+    public void paintInfoPanelConnections(Graphics g, int XOffset, int YOffset, int tileWidth, int tileHeight){
         if(this.connections.get(Direction.UP)) {
         }
         if(this.connections.get(Direction.DOWN)) {

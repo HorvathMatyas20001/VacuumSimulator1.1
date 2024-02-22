@@ -1,27 +1,50 @@
 package org.simulator.gui;
 
+import org.simulator.board.Components.ActiveTile;
 import org.simulator.board.Components.None;
 import org.simulator.board.Components.Tile;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class InfoPanel extends JPanel {
 
     private Tile tile;
+    private ActiveTile activeTile;
+    private JButton switchButton;
     public InfoPanel(){
         setPreferredSize(new Dimension(250, 200));
         this.tile = new None(0,0);
-
+        initializeSwitchButton(20,250,70,50);
     }
+
     protected void paintComponent(Graphics g){
         super.paintComponent(g);
         drawHeader(g);
 
         printTileInspectText(g);
 
-
         drawInfoTile(g);
+
+
+        if(tile.getStateType().isActiveElement()){
+            activeTile = (ActiveTile) tile;
+            drawButton(g,20,250,70,50);
+        }
+        if(tile.getStateType().isActiveElement()){
+            activeTile.setStateChangeListener((isActive) -> {
+                // Perform actions based on the state change
+                if (isActive) {
+                    System.out.println("ActiveTile is now active");
+
+                } else {
+                    System.out.println("ActiveTile is now inactive");
+                }
+                repaint();
+            });
+        }
     }
     public void updateInfoPanel(Tile tile){
         this.tile = tile;
@@ -48,6 +71,61 @@ public class InfoPanel extends JPanel {
     }
     private void drawConnectionInTile(){
 
+    }
+    private void initializeSwitchButton(int x, int y, int width, int height) {
+
+        switchButton = new JButton();
+        //switchButton.setOpaque(false);
+        //switchButton.setContentAreaFilled(false);
+        //switchButton.setBorderPainted(false);
+        switchButton.setBounds(x, y, width, height);
+        switchButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                toggleActive();
+            }
+        });
+        add(switchButton);
+    }
+    protected void toggleActive() {
+
+        System.out.println("before:" + activeTile.active);
+        activeTile.active = !activeTile.active;
+        System.out.println("after:" + activeTile.active);
+
+        repaint();
+    }
+    public void drawButton(Graphics g, int XOffset, int YOffset, int tileWidth, int tileHeight){
+        Graphics2D g2d = (Graphics2D) g;
+        g2d.setStroke(new BasicStroke(6.0f));
+
+        // Draw the button text
+        Font font = new Font("Arial", Font.BOLD, 12);
+        g.setFont(font);
+        FontMetrics metrics = g.getFontMetrics();
+        String buttonText;
+
+        if(activeTile.active){
+            buttonText = "On";
+            g.setColor(Color.GRAY.darker().darker());
+            g.fillRoundRect(XOffset, YOffset, tileWidth, tileHeight, 10, 10);
+
+            g.setColor(Color.GREEN);
+            g2d.drawRoundRect(XOffset, YOffset, tileWidth, tileHeight, 10, 10);
+        }else{
+            buttonText = "Off";
+            g.setColor(Color.GRAY);
+            g.fillRoundRect(XOffset, YOffset, tileWidth, tileHeight, 10, 10);
+
+            g.setColor(Color.RED);
+            g2d.drawRoundRect(XOffset, YOffset, tileWidth, tileHeight, 10, 10);
+        }
+        int textWidth = metrics.stringWidth(buttonText);
+        int textX = XOffset + tileWidth / 2 - textWidth / 2;
+        int textY = YOffset + tileHeight / 2 + metrics.getAscent() / 2;
+        g.setColor(Color.WHITE);
+        g.drawString(buttonText, textX, textY);
     }
 
 //    private final JTextArea basicInfoTextArea;
