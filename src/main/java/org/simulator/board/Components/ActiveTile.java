@@ -1,5 +1,7 @@
 package org.simulator.board.Components;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.simulator.board.StateType;
 
 import javax.swing.*;
@@ -10,8 +12,9 @@ import java.util.function.Consumer;
 
 
 public abstract class ActiveTile extends Tile{
-
-    public boolean active;
+    @Setter
+    @Getter
+    private boolean active;
     private Consumer<Boolean> stateChangeListener;
 
     private JButton switchButton;
@@ -92,7 +95,7 @@ public abstract class ActiveTile extends Tile{
             g.setColor(Color.GRAY);
             g.fillRoundRect(buttonX, buttonY, buttonWidth, buttonHeight, 10, 10);
 
-            g.setColor(Color.RED);
+            g.setColor(Color.BLACK);
             g2d.drawRoundRect(buttonX, buttonY, buttonWidth, buttonHeight, 10, 10);
         }
         int textWidth = metrics.stringWidth(buttonText);

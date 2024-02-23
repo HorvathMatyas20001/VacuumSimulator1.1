@@ -27,7 +27,7 @@ public abstract class Tile extends JPanel{
             connections.put(directions, false);
         }
     }
-    private boolean tooManyConnectionCheck(){
+    public boolean tooManyConnectionCheck(){
         int connectionCounter = 0;
         for(Direction direction : Direction.values()){
             if(connections.get(direction)){
@@ -36,7 +36,7 @@ public abstract class Tile extends JPanel{
         }
         return connectionCounter > this.stateType.getMaxConnections();
     }
-    private boolean tooFewConnectionCheck(){
+    public boolean tooFewConnectionCheck(){
         int connectionCounter = 0;
         for(Direction direction : Direction.values()){
             if(connections.get(direction)){

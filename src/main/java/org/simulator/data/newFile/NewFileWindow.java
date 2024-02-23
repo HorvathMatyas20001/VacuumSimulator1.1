@@ -205,6 +205,7 @@ public class NewFileWindow extends UniversalAdapter {
         logic.getMainFrame().add(board);
         logic.getBoard().revalidate();
         logic.setPath(createPath());
+        logic.getInfoPanel().clearInfoPanel();
         saveBoardToJson(board,createPath());
         testPath();
     }

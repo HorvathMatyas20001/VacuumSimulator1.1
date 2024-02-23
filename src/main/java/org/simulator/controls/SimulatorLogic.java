@@ -43,12 +43,12 @@ public class SimulatorLogic extends UniversalAdapter{
         this.mode = Mode.DRAW_MODE;
         this.startTile = null;
         this.endTile = null;
-        infoPanel = new InfoPanel();
+        infoPanel = new InfoPanel(this);
         componentButtonsList = new ArrayList<>();
 
         //for testing
-        this.testloadboard = new Testloadboard(this);
-        testCodeLoadBoard();
+//        this.testloadboard = new Testloadboard(this);
+//        testCodeLoadBoard();
     }
     public void changeMode(Mode mode){
         this.board.changeBoardMode(mode);
@@ -83,7 +83,6 @@ public class SimulatorLogic extends UniversalAdapter{
                 buttons.setActiveToggle(true);
             }
         }
-
     }
     //mouseMoved is only for testing
     @Override
