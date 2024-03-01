@@ -51,6 +51,7 @@ public class InfoPanel extends JPanel {
         printBasicInfo(g,0,330);
         drawHeader(g,0,380,getWidth(),30,"Errors ");
         printErrors(g,0,410);
+
     }
     private void drawHeader(Graphics g, int XOffset, int YOffset, int headerWidth, int headerHeight, String text){
         g.setColor(Color.LIGHT_GRAY);
@@ -67,9 +68,14 @@ public class InfoPanel extends JPanel {
     }
 
     private void drawInfoTile(Graphics g, int XOffset, int YOffset){
+        Graphics2D g2d = (Graphics2D) g;
+        Stroke originalStroke = g2d.getStroke(); // Store the original stroke
+        g2d.setStroke(new BasicStroke(2.0f));
         int tileWidth = this.getWidth() - 2 * XOffset;
         int tileHeight = tileWidth * 2/3;
         tile.paintInfoPanelTile(g, XOffset, YOffset, tileWidth, tileHeight);
+        g2d.setStroke(originalStroke);
+        tile.paintVacuumStateInfo(g, XOffset, YOffset, tileWidth, tileHeight);
     }
 
     private void updateButtonState(Graphics g, int XOffset, int YOffset, int buttonWidth, int buttonHeight) {
@@ -154,33 +160,4 @@ public class InfoPanel extends JPanel {
         logic.getBoard().repaint();
         repaint();
     }
-
-    private void drawConnectionInTile(){
-
-    }
-
-
-//    }
-//    public  void updateInfoPanel(Tile tile){
-//        updateInfoText(tile);
-//        updateErrorText(tile);
-//    }
-//    private void updateInfoText(Tile tile){
-//        basicInfoTextArea.setText("Basic Information:\n\n- Type: " + tile.getStateType()
-//                +"\n- Active: " + tile.getStateType().isActiveElement()
-//                +"\n- Max Connection: " + tile.getStateType().getMaxConnections()
-//                +"\n- Min Connection: " + tile.getStateType().getMinConnections());
-//    }
-//    private void updateErrorText(Tile tile){
-//        String connectionErrorText = "";
-//        if(tile.tooFewConnectionCheck()){
-//            connectionErrorText = "the current component has\n too few connections";
-//        }else if(tile.tooManyConnectionCheck()){
-//            connectionErrorText = "the current component has\n too many connections";
-//        }
-//        errorInfoTextArea.setText("Errors:\n\n"+ connectionErrorText);
-//    }
-
-
-
 }

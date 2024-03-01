@@ -88,9 +88,13 @@ public class OpenFileWindow extends UniversalAdapter {
         pathValidation();
     }
     public void loadBoard(){
+        if(logic.getBoard() != null){
+            logic.getMainFrame().remove(logic.getBoard());
+        }
         Board board = readInBoard();
         board.addMouseListener(logic);
         board.addMouseMotionListener(logic);
+
         logic.setBoard(board);
         logic.setPath(pathField.getText());
         logic.getMainFrame().add(board);
@@ -113,11 +117,9 @@ public class OpenFileWindow extends UniversalAdapter {
         if(isValidPath(pathField)){
             pathField.setForeground(Color.BLACK);
             isCorrectPath = true;
-            System.out.println("correct");
         }else{
             pathField.setForeground(Color.RED);
             pathField.setToolTipText("Incorrect path");
-            System.out.println("incorrect");
             isCorrectPath = false;
         }
     }

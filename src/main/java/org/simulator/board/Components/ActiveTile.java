@@ -28,23 +28,26 @@ public abstract class ActiveTile extends Tile{
     @Override
     protected void paintComponent(Graphics g){
         super.paintComponent(g);
+        double scale = 0.85;
+        double offsetScale = (1 - scale)/2;
 
-        int XOffset = (int) (this.getWidth() * 0.075);
-        int YOffset = (int) (this.getHeight() * 0.075);
-        int tileWidth = (int) (this.getWidth() * 0.85);
-        int tileHeight = (int) (this.getHeight() * 0.85);
+        int tileWidth = (int) (this.getWidth() * scale);
+        int tileHeight = (int) (this.getHeight() * scale);
+        int XOffset = (int) (this.getWidth() * offsetScale);
+        int YOffset = (int) (this.getHeight() * offsetScale);
 
         setBackground(Color.white);
 
-        paintConnections(g);
+        paintConnections(g, XOffset, YOffset, tileWidth, tileHeight);
 
-        paintComponentBody(g, tileWidth, tileHeight, XOffset, YOffset);
+        paintComponentBody(g, XOffset, YOffset, tileWidth, tileHeight);
 
-        paintErrorMark(g, tileWidth, tileHeight, XOffset, YOffset);
+        paintErrorMark(g, XOffset, YOffset, tileWidth, tileHeight);
 
-        drawTextAndRectangle(g,30,30,XOffset,YOffset);
+        drawTextAndRectangle(g,XOffset,YOffset,30,30);
 
         drawButton(g,XOffset,YOffset,tileWidth,tileHeight);
+        //paintVacuumStateInfo(g, XOffset, YOffset, tileWidth/2, tileHeight/2);
 
     }
     public void setStateChangeListener(Consumer<Boolean> listener) {

@@ -7,8 +7,8 @@ import java.awt.*;
 
 public enum StateType {
     EMPTY(0,0,Color.WHITE, false, Empty.class,"Empty"),
-    PIPE(2,4,Color.LIGHT_GRAY, false, Pipe.class,"Pipe"),
-    CHAMBER(1,4,Color.GREEN, false, Chamber.class,"Chamber"),
+    PIPE(2,4,Color.GREEN.darker(), false, Pipe.class,"Pipe"),
+    CHAMBER(1,4,Color.GREEN.brighter(), false, Chamber.class,"Chamber"),
     GAUGE(1,1,Color.MAGENTA, false, Gauge.class,"Gauge"),
     HV_PUMP(2,2,Color.YELLOW, true, HVPump.class,"H.V. Pump"),
     PUMP_STAND(1,1,Color.ORANGE, true, PumpStand.class,"Pump stand"),

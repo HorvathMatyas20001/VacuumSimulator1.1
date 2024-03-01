@@ -75,5 +75,16 @@ public class Testloadboard {
             }
         }
     }
+    public void printBoardState(Board board){
+        System.out.println("board:");
+        int xDimension = board.getXDimension(); //currentRows
+        int yDimension =  board.getYDimension(); //currentCols
+        for (int i = 0; i < xDimension; i++) {
+            for (int j = 0; j < yDimension; j++) {
+                System.out.print("[" + board.getBoard()[i][j].getStateType() + "]");
+            }
+            System.out.print("\n");
+        }
+    }
 }
 

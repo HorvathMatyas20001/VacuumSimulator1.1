@@ -34,7 +34,7 @@ public class SimulatorLogic extends UniversalAdapter{
     @Setter
     private List<ComponentButtons> componentButtonsList;
     //for testing
-    Testloadboard testloadboard;
+    public Testloadboard testloadboard;
 
     public SimulatorLogic(JFrame mainFrame){
         this.drawType = StateType.NONE;
@@ -43,12 +43,13 @@ public class SimulatorLogic extends UniversalAdapter{
         this.mode = Mode.DRAW_MODE;
         this.startTile = null;
         this.endTile = null;
+        this.board = null;
         infoPanel = new InfoPanel(this);
         componentButtonsList = new ArrayList<>();
 
         //for testing
-//        this.testloadboard = new Testloadboard(this);
-//        testCodeLoadBoard();
+        this.testloadboard = new Testloadboard(this);
+        testCodeLoadBoard();
     }
     public void changeMode(Mode mode){
         this.board.changeBoardMode(mode);
@@ -76,7 +77,6 @@ public class SimulatorLogic extends UniversalAdapter{
         }
     }
     public void updateButtons(){
-        System.out.println("here");
         for(ComponentButtons buttons : componentButtonsList){
             buttons.updateButton(false);
             if(buttons.getType() == drawType){
@@ -121,6 +121,7 @@ public class SimulatorLogic extends UniversalAdapter{
             this.board.smartTileConnectDisconnect(startTile,endTile);
             endTile = null;
             startTile = null;
+            this.infoPanel.repaint();
             this.board.repaint();
         }catch(Exception i){
             System.out.println("not tile");

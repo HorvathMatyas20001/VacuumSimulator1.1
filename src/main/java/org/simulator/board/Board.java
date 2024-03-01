@@ -18,6 +18,14 @@ public class Board extends JPanel{
     private final int xDimension;
     @Getter
     private final int yDimension;
+    @Getter
+    private final int xMinDimension = 2;
+    @Getter
+    private final int yMinDimension = 2;
+    @Getter
+    private final int xMaxDimension = 10;
+    @Getter
+    private final int yMaxDimension = 10;
 
     public Board(int xDimension,int yDimension){
         this.xDimension = xDimension;
@@ -27,6 +35,7 @@ public class Board extends JPanel{
         this.setBackground(Color.WHITE);
         this.setFocusable(false);
     }
+
     private void initializeBoard(int xDimension,int yDimension){
         this.board = new Tile[xDimension][yDimension];
         this.setLayout(new GridLayout(xDimension,yDimension));
@@ -45,6 +54,7 @@ public class Board extends JPanel{
             }
         }
     }
+
     //this method is for further development and will be useful when the simulation part of the project is added
     public void changeBoardMode(Mode mode){
         switch (mode) {
@@ -104,6 +114,7 @@ public class Board extends JPanel{
             this.board[coordinateX][coordinateY + 1].getConnections().put(Direction.LEFT,false);
         }
     }
+
     public void TestStatus(Tile tile){
         for(int x = 0; x < this.xDimension; x++){
             for(int y = 0; y < this.yDimension; y++){

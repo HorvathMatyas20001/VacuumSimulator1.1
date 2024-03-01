@@ -4,6 +4,7 @@ import org.simulator.board.StateType;
 import org.simulator.controls.Exit;
 import org.simulator.controls.SimulatorLogic;
 import org.simulator.data.SaveFileAs.SaveAsCreator;
+import org.simulator.data.boardEdit.BoardEdit;
 import org.simulator.data.newFile.NewFileCreator;
 import org.simulator.data.openFile.OpenFileCreator;
 import org.simulator.data.saveFile.Save;
@@ -29,6 +30,8 @@ public class Simulator {
         SimulatorLogic logic = new SimulatorLogic(frame);
         frame.addKeyListener(logic);
 
+        //file menu
+
         JMenuBar menuBar = new JMenuBar();
         JMenu fileMenu = new JMenu("File");
 
@@ -51,6 +54,51 @@ public class Simulator {
         fileMenu.add(exitItem);
 
         menuBar.add(fileMenu);
+
+        //edit menu
+
+        JMenu editMenu = new JMenu("Edit");
+        BoardEdit boardEdit = new BoardEdit(logic);
+
+        //add options
+        JMenu expansionSubMenu = new JMenu("Board Expansion");
+
+        JMenuItem addRowsToTop = new JMenuItem("Add row to top");
+        addRowsToTop.addActionListener(boardEdit);
+        JMenuItem addRowsToBottom = new JMenuItem("Add row to bottom");
+        addRowsToBottom.addActionListener(boardEdit);
+        JMenuItem addColumnsToLeft = new JMenuItem("Add column to left");
+        addColumnsToLeft.addActionListener(boardEdit);
+        JMenuItem addColumnsToRight = new JMenuItem("Add column to right");
+        addColumnsToRight.addActionListener(boardEdit);
+
+        expansionSubMenu.add(addRowsToTop);
+        expansionSubMenu.add(addRowsToBottom);
+        expansionSubMenu.add(addColumnsToLeft);
+        expansionSubMenu.add(addColumnsToRight);
+
+        editMenu.add(expansionSubMenu);
+
+        //remove options
+        JMenu reductionSubMenu = new JMenu("Board Reduction");
+
+        JMenuItem removeRowsFromTop = new JMenuItem("Remove row from top");
+        removeRowsFromTop.addActionListener(boardEdit);
+        JMenuItem removeRowsFromBottom = new JMenuItem("Remove row from bottom");
+        removeRowsFromBottom.addActionListener(boardEdit);
+        JMenuItem removeColumnsFromLeft = new JMenuItem("Remove column from left");
+        removeColumnsFromLeft.addActionListener(boardEdit);
+        JMenuItem removeColumnsFromRight = new JMenuItem("Remove column from right");
+        removeColumnsFromRight.addActionListener(boardEdit);
+
+        reductionSubMenu.add(removeRowsFromTop);
+        reductionSubMenu.add(removeRowsFromBottom);
+        reductionSubMenu.add(removeColumnsFromLeft);
+        reductionSubMenu.add(removeColumnsFromRight);
+
+        editMenu.add(reductionSubMenu);
+
+        menuBar.add(editMenu);
 
         frame.setJMenuBar(menuBar);
 
