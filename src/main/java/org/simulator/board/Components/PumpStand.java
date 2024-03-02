@@ -4,7 +4,7 @@ import org.simulator.board.StateType;
 
 public class PumpStand extends ActiveTile{
     public PumpStand(int xCoordinate, int yCoordinate){
-        super(StateType.PUMP_STAND);
+        super(StateType.PUMP_STAND,"on","off");
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
         initializeConnections();

@@ -21,9 +21,15 @@ public abstract class Tile extends JPanel{
     @Setter
     protected int yCoordinate;
     protected boolean isVacuum;
-    
+    protected final Color vacuumColor = Color.WHITE;
+    protected final Color airColor = Color.GRAY;
+    protected Color currentColor = airColor;
+    protected final Color backgroundColor = Color.LIGHT_GRAY;
+
     protected Tile(StateType stateType) {
         this.stateType = stateType;
+        setBackground(backgroundColor);
+        VacuumAirStateChanger(false);
     }
     protected void initializeConnections() {
         connections = new EnumMap<>(Direction.class);
@@ -31,6 +37,12 @@ public abstract class Tile extends JPanel{
             connections.put(directions, false);
         }
     }
+    protected void VacuumAirStateChanger(boolean vacuumState){
+        this.isVacuum = vacuumState;
+        currentColor = vacuumState ? vacuumColor : airColor;
+
+    }
+
     public boolean tooManyConnectionCheck(){
         int connectionCounter = 0;
         for(Direction direction : Direction.values()){
@@ -56,28 +68,28 @@ public abstract class Tile extends JPanel{
         g2d.setStroke(new BasicStroke(6.0f));
         g.setColor(Color.BLACK);
         if(this.connections.get(Direction.UP)) {
-            g.setColor(Color.LIGHT_GRAY);
+            g.setColor(currentColor);
             g.fillRect(this.getWidth()/4,0,this.getWidth()/2,YOffset);
             g.setColor(Color.BLACK);
             g.drawLine(this.getWidth()/4,0,this.getWidth()/4,YOffset);
             g.drawLine(this.getWidth()*3/4,0,this.getWidth()*3/4,YOffset);
         }
         if(this.connections.get(Direction.DOWN)) {
-            g.setColor(Color.LIGHT_GRAY);
+            g.setColor(currentColor);
             g.fillRect(this.getWidth()/4, YOffset + tileHeight,this.getWidth()/2,this.getHeight());
             g.setColor(Color.BLACK);
             g.drawLine(this.getWidth()/4,YOffset + tileHeight,this.getWidth()/4,this.getHeight());
             g.drawLine(this.getWidth()*3/4,YOffset + tileHeight,this.getWidth()*3/4,this.getHeight());
         }
         if(this.connections.get(Direction.LEFT)) {
-            g.setColor(Color.LIGHT_GRAY);
+            g.setColor(currentColor);
             g.fillRect(0,this.getHeight()/4,XOffset,this.getHeight()/2);
             g.setColor(Color.BLACK);
             g.drawLine(0,this.getHeight()/4,XOffset,this.getHeight()/4);
             g.drawLine(0,this.getHeight()* 3/4,XOffset,this.getHeight()* 3/4);
         }
         if(this.connections.get(Direction.RIGHT)) {
-            g.setColor(Color.LIGHT_GRAY);
+            g.setColor(currentColor);
             g.fillRect(XOffset + tileWidth,this.getHeight()/4,this.getWidth(),this.getHeight()/2);
             g.setColor(Color.BLACK);
             g.drawLine(XOffset + tileWidth,this.getHeight()/4,this.getWidth(),this.getHeight()/4);
@@ -154,8 +166,6 @@ public abstract class Tile extends JPanel{
         int XOffset = (int) (this.getWidth() * offsetScale);
         int YOffset = (int) (this.getHeight() * offsetScale);
 
-        setBackground(Color.white);
-
         paintConnections(g, XOffset, YOffset, tileWidth, tileHeight);
 
         paintComponentBody(g, XOffset, YOffset, tileWidth, tileHeight);
@@ -180,7 +190,7 @@ public abstract class Tile extends JPanel{
         Stroke originalStroke = g2d.getStroke();
         g2d.setStroke(new BasicStroke(2.0f));
 
-        g.setColor(Color.GRAY);
+        g.setColor(currentColor);
         g.fillRoundRect(XOffset + tileWidth/4,YOffset + tileHeight/4,tileWidth/2,tileHeight/2,10,10);
 
         g.setColor(Color.BLACK);
@@ -201,21 +211,21 @@ public abstract class Tile extends JPanel{
         }
 
         if(this.connections.get(Direction.UP)) {
-            g.setColor(Color.GRAY);
+            g.setColor(currentColor);
             g.fillRect(XOffset + tileWidth/4,YOffset,tileWidth/2,tileHeight/2);
             g.setColor(Color.BLACK);
             g.drawLine(XOffset + tileWidth/4, YOffset, XOffset + tileWidth/4 ,YOffset + tileHeight/2);
             g.drawLine(XOffset + tileWidth*3/4, YOffset, XOffset + tileWidth*3/4 ,YOffset + tileHeight/2);
         }
         if(this.connections.get(Direction.DOWN)) {
-            g.setColor(Color.GRAY);
+            g.setColor(currentColor);
             g.fillRect(XOffset + tileWidth/4,YOffset + tileHeight/2 ,tileWidth/2,tileHeight/2);
             g.setColor(Color.BLACK);
             g.drawLine(XOffset + tileWidth/4, YOffset+ tileHeight/2, XOffset + tileWidth/4 , YOffset + tileHeight);
             g.drawLine(XOffset + tileWidth *3/4, YOffset+ tileHeight/2, XOffset + tileWidth *3/4 , YOffset + tileHeight);
         }
         if(this.connections.get(Direction.LEFT)) {
-            g.setColor(Color.GRAY);
+            g.setColor(currentColor);
             g.fillRect(XOffset,YOffset + tileHeight/4 ,tileWidth/2,tileHeight/2);
             g.setColor(Color.BLACK);
             g.drawLine(XOffset, YOffset+ tileHeight/4,
@@ -225,7 +235,7 @@ public abstract class Tile extends JPanel{
                     XOffset + tileWidth/downTrueLeft,YOffset + tileHeight*3/4);
         }
         if(this.connections.get(Direction.RIGHT)) {
-            g.setColor(Color.GRAY);
+            g.setColor(currentColor);
             g.fillRect(XOffset + tileWidth/2,YOffset + tileHeight/4 ,tileWidth/2,tileHeight/2);
             g.setColor(Color.BLACK);
             g.drawLine(XOffset + (int)(tileWidth * upTrueRight), YOffset+ tileHeight/4,

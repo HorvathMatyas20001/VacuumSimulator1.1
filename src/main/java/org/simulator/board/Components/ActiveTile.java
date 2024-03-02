@@ -16,11 +16,18 @@ public abstract class ActiveTile extends Tile{
     @Getter
     private boolean active;
     private Consumer<Boolean> stateChangeListener;
-
     private JButton switchButton;
-    protected ActiveTile(StateType stateType) {
+
+    protected String activeStateText;
+    protected String inactiveStateText;
+    @Getter
+    protected String currentStateText;
+    protected ActiveTile(StateType stateType,String activeStateText, String inactiveStateText) {
         super(stateType);
+        this.activeStateText = activeStateText;
+        this.inactiveStateText = inactiveStateText;
         initializeSwitchButton();
+        currentStateText = inactiveStateText;
         stateChangeListener = (state) -> {};
         setLayout(null);
     }
@@ -36,8 +43,6 @@ public abstract class ActiveTile extends Tile{
         int XOffset = (int) (this.getWidth() * offsetScale);
         int YOffset = (int) (this.getHeight() * offsetScale);
 
-        setBackground(Color.white);
-
         paintConnections(g, XOffset, YOffset, tileWidth, tileHeight);
 
         paintComponentBody(g, XOffset, YOffset, tileWidth, tileHeight);
@@ -47,7 +52,6 @@ public abstract class ActiveTile extends Tile{
         drawTextAndRectangle(g,XOffset,YOffset,30,30);
 
         drawButton(g,XOffset,YOffset,tileWidth,tileHeight);
-        //paintVacuumStateInfo(g, XOffset, YOffset, tileWidth/2, tileHeight/2);
 
     }
     public void setStateChangeListener(Consumer<Boolean> listener) {
@@ -59,7 +63,8 @@ public abstract class ActiveTile extends Tile{
         switchButton.setOpaque(false);
         switchButton.setContentAreaFilled(false);
         switchButton.setBorderPainted(false);
-        switchButton.setBounds(1, 1, 1, 1);
+        switchButton.setFocusable(false);
+
         switchButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -72,9 +77,9 @@ public abstract class ActiveTile extends Tile{
         Graphics2D g2d = (Graphics2D) g;
         g2d.setStroke(new BasicStroke(6.0f));
 
-        int buttonWidth = tileWidth/6;
-        int buttonHeight = tileHeight/4;
-        int buttonX = XOffset + (tileWidth* 6/7) - buttonWidth/2;
+        int buttonWidth = tileWidth/5;
+        int buttonHeight = tileHeight/3;
+        int buttonX = XOffset + (tileWidth/7) - buttonWidth/2;
         int buttonY = YOffset + (tileHeight * 5/7) - buttonHeight/2;
 
         switchButton.setSize(buttonWidth,buttonHeight);
@@ -84,32 +89,31 @@ public abstract class ActiveTile extends Tile{
         Font font = new Font("Arial", Font.BOLD, 12);
         g.setFont(font);
         FontMetrics metrics = g.getFontMetrics();
-        String buttonText;
+        //String buttonText;
 
         if(active){
-            buttonText = "On";
-            g.setColor(Color.GRAY.darker().darker());
+            g.setColor(Color.GREEN);
             g.fillRoundRect(buttonX, buttonY, buttonWidth, buttonHeight, 10, 10);
 
-            g.setColor(Color.GREEN);
+            g.setColor(Color.BLACK);
             g2d.drawRoundRect(buttonX, buttonY, buttonWidth, buttonHeight, 10, 10);
         }else{
-            buttonText = "Off";
-            g.setColor(Color.GRAY);
+            g.setColor(Color.RED);
             g.fillRoundRect(buttonX, buttonY, buttonWidth, buttonHeight, 10, 10);
 
             g.setColor(Color.BLACK);
             g2d.drawRoundRect(buttonX, buttonY, buttonWidth, buttonHeight, 10, 10);
         }
-        int textWidth = metrics.stringWidth(buttonText);
+        int textWidth = metrics.stringWidth(currentStateText);
         int textX = buttonX + buttonWidth / 2 - textWidth / 2;
         int textY = buttonY + buttonHeight / 2 + metrics.getAscent() / 2;
         g.setColor(Color.WHITE);
-        g.drawString(buttonText, textX, textY);
+        g.drawString(currentStateText, textX, textY);
     }
 
     protected void toggleActive() {
         active = !active;
+        currentStateText = active ? activeStateText : inactiveStateText;
         stateChangeListener.accept(active);
         repaint();
     }

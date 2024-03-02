@@ -15,10 +15,12 @@ public class InfoPanel extends JPanel {
     private Tile tile;
     private ActiveTile activeTile;
     private JButton switchButton;
-    private SimulatorLogic logic;
+    private final SimulatorLogic logic;
+    private final Color backgroundColor = Color.GRAY;
 
     public InfoPanel(SimulatorLogic logic){
         this.logic = logic;
+        setBackground(backgroundColor);
         setPreferredSize(new Dimension(250, 200));
         this.tile = new None(0,0);
         initializeSwitchButton(20,230,70,50);
@@ -30,6 +32,7 @@ public class InfoPanel extends JPanel {
         switchButton.setContentAreaFilled(false);
         switchButton.setBorderPainted(false);
         switchButton.setBounds(x, y, width, height);
+        switchButton.setFocusable(false);
         switchButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -64,7 +67,7 @@ public class InfoPanel extends JPanel {
     }
 
     private void printInspectTileName(Graphics g, int XOffset, int YOffset){
-        g.drawString("Inspected tile: " + this.tile.getStateType(), XOffset + 5, YOffset);
+        g.drawString("Inspected element:" + this.tile.getStateType().getText(), XOffset + 5, YOffset);
     }
 
     private void drawInfoTile(Graphics g, int XOffset, int YOffset){
@@ -99,28 +102,25 @@ public class InfoPanel extends JPanel {
         Font font = new Font("Arial", Font.BOLD, 12);
         g.setFont(font);
         FontMetrics metrics = g.getFontMetrics();
-        String buttonText;
 
         if(activeTile.isActive()){
-            buttonText = "On";
-            g.setColor(Color.GRAY.darker().darker());
+            g.setColor(Color.GREEN);
             g.fillRoundRect(XOffset, YOffset, tileWidth, tileHeight, 10, 10);
 
-            g.setColor(Color.GREEN);
+            g.setColor(Color.BLACK);
             g2d.drawRoundRect(XOffset, YOffset, tileWidth, tileHeight, 10, 10);
         }else{
-            buttonText = "Off";
-            g.setColor(Color.GRAY);
+            g.setColor(Color.RED);
             g.fillRoundRect(XOffset, YOffset, tileWidth, tileHeight, 10, 10);
 
-            g.setColor(Color.RED);
+            g.setColor(Color.BLACK);
             g2d.drawRoundRect(XOffset, YOffset, tileWidth, tileHeight, 10, 10);
         }
-        int textWidth = metrics.stringWidth(buttonText);
+        int textWidth = metrics.stringWidth(activeTile.getCurrentStateText());
         int textX = XOffset + tileWidth / 2 - textWidth / 2;
         int textY = YOffset + tileHeight / 2 + metrics.getAscent() / 2;
         g.setColor(Color.WHITE);
-        g.drawString(buttonText, textX, textY);
+        g.drawString(activeTile.getCurrentStateText(), textX, textY);
 
         g2d.setStroke(originalStroke); // Reset the stroke size
     }

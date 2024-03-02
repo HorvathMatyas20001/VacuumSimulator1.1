@@ -26,13 +26,14 @@ public class Board extends JPanel{
     private final int xMaxDimension = 10;
     @Getter
     private final int yMaxDimension = 10;
+    private final Color backgroundColor = Color.LIGHT_GRAY;
 
     public Board(int xDimension,int yDimension){
         this.xDimension = xDimension;
         this.yDimension = yDimension;
         this.initializeBoard(xDimension,yDimension);
         this.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
-        this.setBackground(Color.WHITE);
+        this.setBackground(backgroundColor);
         this.setFocusable(false);
     }
 
@@ -57,10 +58,7 @@ public class Board extends JPanel{
 
     //this method is for further development and will be useful when the simulation part of the project is added
     public void changeBoardMode(Mode mode){
-        switch (mode) {
-            case DRAW_MODE -> this.setBackground(Color.WHITE);
-            case SIMULATION_MODE -> this.setBackground(Color.GRAY);
-        }
+
     }
     public void replaceTile(Tile tile, StateType stateType){
         int coordinateX = tile.getXCoordinate();

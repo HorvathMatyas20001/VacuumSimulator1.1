@@ -21,6 +21,8 @@ public class ComponentButtons extends JButton implements ActionListener{
     int buttonHeight = 40;
     @Setter
     private boolean activeToggle;
+    protected final Color backgroundColor = Color.GRAY;
+    protected final Color buttonOutline = Color.DARK_GRAY;
     public ComponentButtons(SimulatorLogic logic, StateType type){
         super(type.getText());
         setPreferredSize(new Dimension(buttonWidth, buttonHeight));
@@ -29,7 +31,7 @@ public class ComponentButtons extends JButton implements ActionListener{
         this.setFocusable(false);
         this.addActionListener(this);
         this.setBorder(null);
-        this.setBackground(Color.LIGHT_GRAY);
+        this.setBackground(backgroundColor);
         this.activeToggle = false;
 
     }
@@ -72,8 +74,7 @@ public class ComponentButtons extends JButton implements ActionListener{
         int x = (width - newWidth) / 2;
         int y = (height - newHeight) / 2;
 
-        g.setColor(Color.GRAY);
-
+        g.setColor(buttonOutline);
 
         if (activeToggle) {
             g.setColor(Color.GREEN);
@@ -115,7 +116,7 @@ public class ComponentButtons extends JButton implements ActionListener{
         g.fillRoundRect(whiteRectX, whiteRectY, whiteRectWidth, whiteRectHeight, 5, 5);
 
         Graphics2D g2d = (Graphics2D) g;
-        g.setColor(Color.GRAY);
+        g.setColor(buttonOutline);
         g2d.setStroke(new BasicStroke(2.0f));
         g.drawRoundRect(whiteRectX, whiteRectY, whiteRectWidth, whiteRectHeight, 5, 5);
 

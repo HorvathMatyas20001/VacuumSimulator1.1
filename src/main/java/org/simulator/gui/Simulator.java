@@ -24,7 +24,7 @@ public class Simulator {
         frame.setMinimumSize(new Dimension(700, 500));
 
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        frame.getContentPane().setBackground(Color.GRAY);
+        frame.setBackground(Color.GRAY);
         //frame.pack();
 
         SimulatorLogic logic = new SimulatorLogic(frame);
@@ -99,15 +99,18 @@ public class Simulator {
         editMenu.add(reductionSubMenu);
 
         menuBar.add(editMenu);
+        menuBar.setBackground(Color.GRAY);
+        menuBar.setBorder(BorderFactory.createEmptyBorder());
 
         frame.setJMenuBar(menuBar);
 
+
         JPanel sideMenu = new JPanel();
-        sideMenu.setBackground(Color.LIGHT_GRAY);
+        sideMenu.setBackground(Color.GRAY);
         sideMenu.setLayout(new BorderLayout());
 
         JPanel labelPanel = new JPanel();
-        labelPanel.setBackground(Color.LIGHT_GRAY);
+        labelPanel.setBackground(Color.GRAY);
         labelPanel.setLayout(new BoxLayout(labelPanel, BoxLayout.X_AXIS));
         JLabel componentLabel = new JLabel("Components");
         labelPanel.add(Box.createHorizontalGlue()); // Pushes the label to the left
