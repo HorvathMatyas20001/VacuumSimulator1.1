@@ -10,6 +10,7 @@ public class PumpStand extends ActiveTile{
         initializeConnections();
     }
     @Override
-    public void activate() {
+    protected void activate() {
+        VacuumAirStateChanger(!isVacuum);
     }
 }

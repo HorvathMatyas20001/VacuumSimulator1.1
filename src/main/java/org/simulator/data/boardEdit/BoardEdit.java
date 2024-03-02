@@ -20,7 +20,17 @@ public class BoardEdit extends UniversalAdapter {
         this.logic = logic;
         initializeMenuActions();
     }
-    public void initializeMenuActions(){
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() instanceof JMenuItem) {
+            JMenuItem menuItem = (JMenuItem) e.getSource();
+            Runnable action = menuActions.get(menuItem.getText());
+            if (action != null) {
+                action.run();
+            }
+        }
+    }
+    private void initializeMenuActions(){
         menuActions.put("Add row to bottom", () -> {
             if (logic.getBoard().getXDimension() >= logic.getBoard().getXMaxDimension()) { // Check if adding would violate constraint
                 JOptionPane.showMessageDialog(logic.getMainFrame(), "Adding row is prohibited as it would result in more than " +
@@ -87,18 +97,8 @@ public class BoardEdit extends UniversalAdapter {
             }
         });
     }
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource() instanceof JMenuItem) {
-            JMenuItem menuItem = (JMenuItem) e.getSource();
-            Runnable action = menuActions.get(menuItem.getText());
-            if (action != null) {
-                action.run();
-            }
-        }
-    }
-//-----------------------   add rows and columns    -----------------------//
-    public Board addRowsToBottom(int numRowsToAdd) {
+//-----------------------   Add rows and columns    -----------------------//
+    private Board addRowsToBottom(int numRowsToAdd) {
         int xDimension = logic.getBoard().getXDimension(); //currentRows
         int yDimension =  logic.getBoard().getYDimension(); //currentCols
 
@@ -112,10 +112,9 @@ public class BoardEdit extends UniversalAdapter {
                 newBoard.getBoard()[i][j] = new Empty(i, j);
             }
         }
-       logic.testloadboard.printBoardState(newBoard);
        return newBoard;
     }
-    public Board addColumnsToRight(int numColsToAdd) {
+    private Board addColumnsToRight(int numColsToAdd) {
         int xDimension = logic.getBoard().getXDimension();
         int yDimension =  logic.getBoard().getYDimension();
         Board newBoard = new Board(xDimension ,yDimension + numColsToAdd);
@@ -128,10 +127,9 @@ public class BoardEdit extends UniversalAdapter {
                 newBoard.getBoard()[i][j] = new Empty(i, j);
             }
         }
-        logic.testloadboard.printBoardState(newBoard);
         return newBoard;
     }
-    public Board addRowsToTop(int numRowsToAdd) {
+    private Board addRowsToTop(int numRowsToAdd) {
 
         int xDimension = logic.getBoard().getXDimension();
         int yDimension = logic.getBoard().getYDimension();
@@ -151,10 +149,9 @@ public class BoardEdit extends UniversalAdapter {
                 newBoard.getBoard()[i + 1][j] = tile;
             }
         }
-        logic.testloadboard.printBoardState(newBoard);
         return newBoard;
     }
-    public Board addColumnsToLeft(int numColsToAdd) {
+    private Board addColumnsToLeft(int numColsToAdd) {
         int xDimension = logic.getBoard().getXDimension();
         int yDimension = logic.getBoard().getYDimension();
 
@@ -173,11 +170,10 @@ public class BoardEdit extends UniversalAdapter {
                 newBoard.getBoard()[i][j +1] = tile;
             }
         }
-        logic.testloadboard.printBoardState(newBoard);
         return newBoard;
     }
-//-----------------------   remove rows and columns -----------------------//
-    public Board removeRowsFromBottom(int numRowsToRemove) {
+//-----------------------   Remove rows and columns -----------------------//
+    private Board removeRowsFromBottom(int numRowsToRemove) {
         int xDimension = logic.getBoard().getXDimension();
         int yDimension = logic.getBoard().getYDimension();
         int newRows = xDimension - numRowsToRemove;
@@ -195,7 +191,7 @@ public class BoardEdit extends UniversalAdapter {
         }
         return newBoard;
     }
-    public Board removeColumnsRight(int numColsToRemove) {
+    private Board removeColumnsRight(int numColsToRemove) {
         int xDimension = logic.getBoard().getXDimension();
         int yDimension = logic.getBoard().getYDimension();
         int newCols = yDimension - numColsToRemove;
@@ -213,7 +209,7 @@ public class BoardEdit extends UniversalAdapter {
         }
         return newBoard;
     }
-    public Board removeRowsFromTop(int numRowsToRemove) {
+    private Board removeRowsFromTop(int numRowsToRemove) {
         int xDimension = logic.getBoard().getXDimension();
         int yDimension = logic.getBoard().getYDimension();
         int newRows = xDimension - numRowsToRemove;
@@ -236,7 +232,7 @@ public class BoardEdit extends UniversalAdapter {
         }
         return newBoard;
     }
-    public Board removeColumnsFromLeft(int numColsToRemove) {
+    private Board removeColumnsFromLeft(int numColsToRemove) {
         int xDimension = logic.getBoard().getXDimension();
         int yDimension = logic.getBoard().getYDimension();
         int newCols = yDimension - numColsToRemove;
@@ -261,7 +257,7 @@ public class BoardEdit extends UniversalAdapter {
         return newBoard;
     }
 
-//-----------------------   tools   -----------------------//
+//-----------------------   Tools   -----------------------//
     private void cleanup(Board board){
         if(board == null){
             return;

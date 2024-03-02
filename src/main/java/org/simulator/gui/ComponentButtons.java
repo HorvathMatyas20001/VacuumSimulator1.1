@@ -28,10 +28,14 @@ public class ComponentButtons extends JButton implements ActionListener{
         setPreferredSize(new Dimension(buttonWidth, buttonHeight));
         this.logic = logic;
         this.type = type;
-        this.setFocusable(false);
+
         this.addActionListener(this);
+        this.setFocusable(false);
         this.setBorder(null);
+        this.setContentAreaFilled(false);
+        this.setOpaque(true);
         this.setBackground(backgroundColor);
+
         this.activeToggle = false;
 
     }
@@ -84,12 +88,9 @@ public class ComponentButtons extends JButton implements ActionListener{
         } else {
             g2d.drawRoundRect(x, y, newWidth, newHeight, 30, 30);
             g.setColor(type.getColor());
-
         }
-
         g2d.fillRoundRect(x, y, newWidth, newHeight, 30, 30);
     }
-
     private void drawTextAndRectangle(Graphics g, int width, int height) {
         Font font = new Font("Arial", Font.PLAIN, 12);
         g.setFont(font);

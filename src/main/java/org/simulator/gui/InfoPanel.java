@@ -26,6 +26,33 @@ public class InfoPanel extends JPanel {
         initializeSwitchButton(20,230,70,50);
         setLayout(null);
     }
+    public void updateInfoPanel(Tile tile){
+        this.tile = tile;
+        repaint();
+    }
+    public void clearInfoPanel(){
+        this.tile = new None(0,0);
+        repaint();
+    }
+    protected void paintComponent(Graphics g){
+        super.paintComponent(g);
+        drawHeader(g,0,0,getWidth(),30,"Info Panel");
+        printInspectTileName(g,0,50);
+        drawInfoTile(g,(int) (this.getWidth() * 0.02),60);
+        updateButtonState(g,20,230,70,50);
+        drawHeader(g,0,300,getWidth(),30,"Basic information");
+        printBasicInfo(g,0,330);
+        drawHeader(g,0,380,getWidth(),30,"Errors ");
+        printErrors(g,0,410);
+
+    }
+    protected void toggleActive() {
+        System.out.println("click");
+        activeTile.setActive(!activeTile.isActive());
+        System.out.println("active:"+ activeTile.isActive());
+        logic.getBoard().repaint();
+        repaint();
+    }
     private void initializeSwitchButton(int x, int y, int width, int height) {
         switchButton = new JButton();
         switchButton.setOpaque(false);
@@ -43,19 +70,6 @@ public class InfoPanel extends JPanel {
         });
         add(switchButton);
     }
-
-    protected void paintComponent(Graphics g){
-        super.paintComponent(g);
-        drawHeader(g,0,0,getWidth(),30,"Info Panel");
-        printInspectTileName(g,0,50);
-        drawInfoTile(g,(int) (this.getWidth() * 0.02),60);
-        updateButtonState(g,20,230,70,50);
-        drawHeader(g,0,300,getWidth(),30,"Basic information");
-        printBasicInfo(g,0,330);
-        drawHeader(g,0,380,getWidth(),30,"Errors ");
-        printErrors(g,0,410);
-
-    }
     private void drawHeader(Graphics g, int XOffset, int YOffset, int headerWidth, int headerHeight, String text){
         g.setColor(Color.LIGHT_GRAY);
         g.fillRect(XOffset, YOffset, headerWidth, headerHeight);
@@ -65,11 +79,9 @@ public class InfoPanel extends JPanel {
         g.setFont(font);
         g.drawString(text, XOffset + 5, YOffset+ 20);
     }
-
     private void printInspectTileName(Graphics g, int XOffset, int YOffset){
         g.drawString("Inspected element:" + this.tile.getStateType().getText(), XOffset + 5, YOffset);
     }
-
     private void drawInfoTile(Graphics g, int XOffset, int YOffset){
         Graphics2D g2d = (Graphics2D) g;
         Stroke originalStroke = g2d.getStroke(); // Store the original stroke
@@ -80,7 +92,6 @@ public class InfoPanel extends JPanel {
         g2d.setStroke(originalStroke);
         tile.paintVacuumStateInfo(g, XOffset, YOffset, tileWidth, tileHeight);
     }
-
     private void updateButtonState(Graphics g, int XOffset, int YOffset, int buttonWidth, int buttonHeight) {
         if (tile.getStateType().isActiveElement()) {
             activeTile = (ActiveTile) tile;
@@ -96,26 +107,18 @@ public class InfoPanel extends JPanel {
     public void drawButton(Graphics g, int XOffset, int YOffset, int tileWidth, int tileHeight){
         Graphics2D g2d = (Graphics2D) g;
         Stroke originalStroke = g2d.getStroke(); // Store the original stroke
-        g2d.setStroke(new BasicStroke(6.0f));
+        g2d.setStroke(new BasicStroke(4.0f));
 
         // Draw the button text
         Font font = new Font("Arial", Font.BOLD, 12);
         g.setFont(font);
         FontMetrics metrics = g.getFontMetrics();
 
-        if(activeTile.isActive()){
-            g.setColor(Color.GREEN);
-            g.fillRoundRect(XOffset, YOffset, tileWidth, tileHeight, 10, 10);
+        g.setColor(activeTile.isActive() ? Color.GREEN : Color.RED);
+        g.fillRoundRect(XOffset, YOffset, tileWidth, tileHeight, 10, 10);
+        g.setColor(Color.BLACK);
+        g2d.drawRoundRect(XOffset, YOffset, tileWidth, tileHeight, 10, 10);
 
-            g.setColor(Color.BLACK);
-            g2d.drawRoundRect(XOffset, YOffset, tileWidth, tileHeight, 10, 10);
-        }else{
-            g.setColor(Color.RED);
-            g.fillRoundRect(XOffset, YOffset, tileWidth, tileHeight, 10, 10);
-
-            g.setColor(Color.BLACK);
-            g2d.drawRoundRect(XOffset, YOffset, tileWidth, tileHeight, 10, 10);
-        }
         int textWidth = metrics.stringWidth(activeTile.getCurrentStateText());
         int textX = XOffset + tileWidth / 2 - textWidth / 2;
         int textY = YOffset + tileHeight / 2 + metrics.getAscent() / 2;
@@ -124,7 +127,6 @@ public class InfoPanel extends JPanel {
 
         g2d.setStroke(originalStroke); // Reset the stroke size
     }
-
     private void printBasicInfo(Graphics g, int XOffset, int YOffset) {
         String maxConnections =  "Max Connection: " + tile.getStateType().getMaxConnections() ;
         String minConnections =  "Min Connection: " + tile.getStateType().getMinConnections() ;
@@ -133,7 +135,6 @@ public class InfoPanel extends JPanel {
         g.drawString(minConnections, XOffset + 5, YOffset + 40);
     }
     private void printErrors(Graphics g, int XOffset, int YOffset) {
-        String connectionErrorText = "None";
         if(tile.tooFewConnectionCheck()){
             g.drawString("the current component has", XOffset + 5, YOffset + 20);
             g.drawString("too few connections", XOffset + 5, YOffset + 40);
@@ -145,19 +146,4 @@ public class InfoPanel extends JPanel {
         }
     }
 
-    public void updateInfoPanel(Tile tile){
-        this.tile = tile;
-        repaint();
-    }
-    public void clearInfoPanel(){
-        this.tile = new None(0,0);
-        repaint();
-    }
-    protected void toggleActive() {
-        System.out.println("click");
-        activeTile.setActive(!activeTile.isActive());
-        System.out.println("active:"+ activeTile.isActive());
-        logic.getBoard().repaint();
-        repaint();
-    }
 }

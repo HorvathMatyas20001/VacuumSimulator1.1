@@ -33,9 +33,16 @@ public class SimulatorLogic extends UniversalAdapter{
     private final InfoPanel infoPanel;
     @Setter
     private List<ComponentButtons> componentButtonsList;
+    @Getter
+    private final int xMinDimension = 2;
+    @Getter
+    private final int yMinDimension = 2;
+    @Getter
+    private final int xMaxDimension = 10;
+    @Getter
+    private final int yMaxDimension = 10;
     //for testing
     public Testloadboard testloadboard;
-
     public SimulatorLogic(JFrame mainFrame){
         this.drawType = StateType.NONE;
         this.mainFrame = mainFrame;
@@ -48,33 +55,13 @@ public class SimulatorLogic extends UniversalAdapter{
         componentButtonsList = new ArrayList<>();
 
         //for testing
-        this.testloadboard = new Testloadboard(this);
-        testCodeLoadBoard();
+        //this.testloadboard = new Testloadboard(this);
+        //testCodeLoadBoard();
     }
     public void changeMode(Mode mode){
         this.board.changeBoardMode(mode);
         this.mode = mode;
         this.board.repaint();
-    }
-    private void paintTile(MouseEvent e){
-        try {
-            Component current = this.board.getComponentAt(e.getX(), e.getY());
-            Tile temp = (Tile)current;
-            if (drawType != StateType.NONE && drawType != temp.getStateType()) {
-                this.board.replaceTile((Tile) current, drawType);
-            }
-            this.board.repaint();
-        }catch(Exception i){
-            System.out.println("not tile");
-        }
-    }
-    private void getComponentInfo(MouseEvent e){
-        try{
-            Component current = this.board.getComponentAt(e.getX(), e.getY());
-            infoPanel.updateInfoPanel((Tile)current);
-        }catch(ClassCastException i){
-            System.out.println("not tile");
-        }
     }
     public void updateButtons(){
         for(ComponentButtons buttons : componentButtonsList){
@@ -112,7 +99,6 @@ public class SimulatorLogic extends UniversalAdapter{
             System.out.println("not tile");
         }
     }
-
     @Override
     public void mouseReleased(MouseEvent e) {
         try {
@@ -124,6 +110,26 @@ public class SimulatorLogic extends UniversalAdapter{
             this.infoPanel.repaint();
             this.board.repaint();
         }catch(Exception i){
+            System.out.println("not tile");
+        }
+    }
+    private void paintTile(MouseEvent e){
+        try {
+            Component current = this.board.getComponentAt(e.getX(), e.getY());
+            Tile temp = (Tile)current;
+            if (drawType != StateType.NONE && drawType != temp.getStateType()) {
+                this.board.replaceTile((Tile) current, drawType);
+            }
+            this.board.repaint();
+        }catch(Exception i){
+            System.out.println("not tile");
+        }
+    }
+    private void getComponentInfo(MouseEvent e){
+        try{
+            Component current = this.board.getComponentAt(e.getX(), e.getY());
+            infoPanel.updateInfoPanel((Tile)current);
+        }catch(ClassCastException i){
             System.out.println("not tile");
         }
     }

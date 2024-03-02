@@ -13,8 +13,8 @@ public enum StateType {
     HV_PUMP(2,2,Color.YELLOW, true, HVPump.class,"H.V. Pump"),
     PUMP_STAND(1,1,Color.ORANGE, true, PumpStand.class,"Pump stand"),
     FORE_VACUUM_PUMP(1,1,new Color(191,105,0), true, ForeVacuumPump.class,"Fore vacuum pump"),
-    VALVE(2,2,Color.CYAN, true, Valve.class,"Valve"),
-    VENTING_VALVE(1,1,Color.BLUE, true, VentingValve.class,"Venting valve"),
+    VALVE(2,2,new Color(70,130,180), true, Valve.class,"Valve"),
+    VENTING_VALVE(1,1,new Color(0,0,139), true, VentingValve.class,"Venting valve"),
     NONE(0,0,null, false,null,"None");
     @Getter
     private final int minConnections;

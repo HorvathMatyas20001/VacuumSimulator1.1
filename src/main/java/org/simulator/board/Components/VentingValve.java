@@ -10,7 +10,6 @@ public class VentingValve extends ActiveTile{
         initializeConnections();
     }
     @Override
-    public void activate() {
-        //implementation needed.
+    protected void activate() {
     }
 }

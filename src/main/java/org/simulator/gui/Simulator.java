@@ -30,11 +30,9 @@ public class Simulator {
         SimulatorLogic logic = new SimulatorLogic(frame);
         frame.addKeyListener(logic);
 
-        //file menu
-
+//-----------------------   File menu    -----------------------//
         JMenuBar menuBar = new JMenuBar();
         JMenu fileMenu = new JMenu("File");
-
 
         JMenuItem newItem = new JMenuItem("New");
         newItem.addActionListener(new NewFileCreator(logic));
@@ -55,12 +53,12 @@ public class Simulator {
 
         menuBar.add(fileMenu);
 
-        //edit menu
+//-----------------------   Edit menu    -----------------------//
 
         JMenu editMenu = new JMenu("Edit");
         BoardEdit boardEdit = new BoardEdit(logic);
 
-        //add options
+    //-----------------------   Add options    -----------------------//
         JMenu expansionSubMenu = new JMenu("Board Expansion");
 
         JMenuItem addRowsToTop = new JMenuItem("Add row to top");
@@ -78,8 +76,8 @@ public class Simulator {
         expansionSubMenu.add(addColumnsToRight);
 
         editMenu.add(expansionSubMenu);
+    //-----------------------   Remove options    -----------------------//
 
-        //remove options
         JMenu reductionSubMenu = new JMenu("Board Reduction");
 
         JMenuItem removeRowsFromTop = new JMenuItem("Remove row from top");
@@ -103,26 +101,25 @@ public class Simulator {
         menuBar.setBorder(BorderFactory.createEmptyBorder());
 
         frame.setJMenuBar(menuBar);
-
-
+//-----------------------   Component menu      -----------------------//
         JPanel sideMenu = new JPanel();
         sideMenu.setBackground(Color.GRAY);
         sideMenu.setLayout(new BorderLayout());
+    //-----------------------   Header  -----------------------//
+        JPanel componentHeader = new JPanel(){
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                int headerWidth = getWidth();
+                int headerHeight = 30; // Adjust as needed
+                drawHeader(g, 0, 0, headerWidth, headerHeight, "Components");
+            }
+        };
+        componentHeader.setBackground(Color.GRAY);
+        componentHeader.setPreferredSize(new Dimension(sideMenu.getWidth(), 31));
 
-        JPanel labelPanel = new JPanel();
-        labelPanel.setBackground(Color.GRAY);
-        labelPanel.setLayout(new BoxLayout(labelPanel, BoxLayout.X_AXIS));
-        JLabel componentLabel = new JLabel("Components");
-        labelPanel.add(Box.createHorizontalGlue()); // Pushes the label to the left
-        labelPanel.add(componentLabel);
-        labelPanel.add(Box.createHorizontalGlue());
-
-        // Set the maximum height of the labelPanel to make it thinner
-        labelPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
-
-        // Add labelPanel to the top (LINE_END)
-        sideMenu.add(labelPanel, BorderLayout.PAGE_START);
-
+        sideMenu.add(componentHeader, BorderLayout.PAGE_START);
+    //-----------------------   Adding Components    -----------------------//
         List<ComponentButtons> componentButtonsList = new ArrayList<>();
 
         JPanel buttonsPanel = new JPanel();
@@ -139,11 +136,19 @@ public class Simulator {
 
         // Add buttonsPanel under labelPanel
         sideMenu.add(buttonsPanel, BorderLayout.CENTER);
-
         logic.setComponentButtonsList(componentButtonsList);
 
         frame.add(sideMenu, BorderLayout.LINE_END);
         frame.add(logic.getInfoPanel(), BorderLayout.LINE_START);
         frame.setVisible(true);
+    }
+    private void drawHeader(Graphics g, int XOffset, int YOffset, int headerWidth, int headerHeight, String text){
+        g.setColor(Color.LIGHT_GRAY);
+        g.fillRect(XOffset, YOffset, headerWidth, headerHeight);
+        g.setColor(Color.BLACK);
+        g.drawRect(XOffset, YOffset, headerWidth - 1, headerHeight);
+        Font font = new Font("Arial", Font.PLAIN, 14);
+        g.setFont(font);
+        g.drawString(text, XOffset + 5, YOffset+ 20);
     }
 }

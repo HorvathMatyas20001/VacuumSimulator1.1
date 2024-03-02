@@ -10,6 +10,6 @@ public class HVPump extends ActiveTile{
         initializeConnections();
     }
     @Override
-    public void activate() {
+    protected void activate() {
     }
 }

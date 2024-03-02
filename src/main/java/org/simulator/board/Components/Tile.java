@@ -20,9 +20,10 @@ public abstract class Tile extends JPanel{
     @Getter
     @Setter
     protected int yCoordinate;
+    @Getter
     protected boolean isVacuum;
-    protected final Color vacuumColor = Color.WHITE;
-    protected final Color airColor = Color.GRAY;
+    protected final Color vacuumColor = Color.GRAY;
+    protected final Color airColor = new Color(135,206,235);
     protected Color currentColor = airColor;
     protected final Color backgroundColor = Color.LIGHT_GRAY;
 
@@ -31,18 +32,6 @@ public abstract class Tile extends JPanel{
         setBackground(backgroundColor);
         VacuumAirStateChanger(false);
     }
-    protected void initializeConnections() {
-        connections = new EnumMap<>(Direction.class);
-        for (Direction directions : Direction.values()) {
-            connections.put(directions, false);
-        }
-    }
-    protected void VacuumAirStateChanger(boolean vacuumState){
-        this.isVacuum = vacuumState;
-        currentColor = vacuumState ? vacuumColor : airColor;
-
-    }
-
     public boolean tooManyConnectionCheck(){
         int connectionCounter = 0;
         for(Direction direction : Direction.values()){
@@ -61,7 +50,104 @@ public abstract class Tile extends JPanel{
         }
         return connectionCounter < this.stateType.getMinConnections();
     }
+    public void paintInfoPanelTile(Graphics g, int XOffset, int YOffset, int tileWidth, int tileHeight){
+        g.setColor(this.getStateType().getColor());
+        int cornerRadius = 30;
 
+        g.fillRoundRect(XOffset,YOffset,tileWidth,tileHeight,cornerRadius,cornerRadius);
+        g.setColor(Color.BLACK);
+        g.drawRoundRect(XOffset,YOffset,tileWidth,tileHeight,cornerRadius,cornerRadius);
+    }
+    public void paintVacuumStateInfo(Graphics g, int XOffset, int YOffset, int tileWidth, int tileHeight){
+        Graphics2D g2d = (Graphics2D) g;
+        Stroke originalStroke = g2d.getStroke();
+        g2d.setStroke(new BasicStroke(2.0f));
+
+        g.setColor(currentColor);
+        g.fillRoundRect(XOffset + tileWidth/4,YOffset + tileHeight/4,tileWidth/2,tileHeight/2,10,10);
+
+        g.setColor(Color.BLACK);
+        g.drawRoundRect(XOffset + tileWidth/4,YOffset + tileHeight/4,tileWidth/2,tileHeight/2,10,10);
+
+        int upTrueLeft = 2;
+        int downTrueLeft = 2;
+        float upTrueRight = 1f/2f;
+        float downTrueRight = 1f/2f;
+
+        if(this.connections.get(Direction.UP)) {
+            upTrueLeft = 4;
+            upTrueRight = 3f/4f;
+        }
+        if(this.connections.get(Direction.DOWN)){
+            downTrueLeft = 4;
+            downTrueRight = 3f/4f;
+        }
+
+        if(this.connections.get(Direction.UP)) {
+            g.setColor(currentColor);
+            g.fillRect(XOffset + tileWidth/4,YOffset,tileWidth/2,tileHeight/2);
+            g.setColor(Color.BLACK);
+            g.drawLine(XOffset + tileWidth/4, YOffset, XOffset + tileWidth/4 ,YOffset + tileHeight/2);
+            g.drawLine(XOffset + tileWidth*3/4, YOffset, XOffset + tileWidth*3/4 ,YOffset + tileHeight/2);
+        }
+        if(this.connections.get(Direction.DOWN)) {
+            g.setColor(currentColor);
+            g.fillRect(XOffset + tileWidth/4,YOffset + tileHeight/2 ,tileWidth/2,tileHeight/2);
+            g.setColor(Color.BLACK);
+            g.drawLine(XOffset + tileWidth/4, YOffset+ tileHeight/2, XOffset + tileWidth/4 , YOffset + tileHeight);
+            g.drawLine(XOffset + tileWidth *3/4, YOffset+ tileHeight/2, XOffset + tileWidth *3/4 , YOffset + tileHeight);
+        }
+        if(this.connections.get(Direction.LEFT)) {
+            g.setColor(currentColor);
+            g.fillRect(XOffset,YOffset + tileHeight/4 ,tileWidth/2,tileHeight/2);
+            g.setColor(Color.BLACK);
+            g.drawLine(XOffset, YOffset+ tileHeight/4,
+                    XOffset + tileWidth/upTrueLeft ,YOffset + tileHeight/4);
+
+            g.drawLine(XOffset, YOffset+ tileHeight*3/4,
+                    XOffset + tileWidth/downTrueLeft,YOffset + tileHeight*3/4);
+        }
+        if(this.connections.get(Direction.RIGHT)) {
+            g.setColor(currentColor);
+            g.fillRect(XOffset + tileWidth/2,YOffset + tileHeight/4 ,tileWidth/2,tileHeight/2);
+            g.setColor(Color.BLACK);
+            g.drawLine(XOffset + (int)(tileWidth * upTrueRight), YOffset+ tileHeight/4,
+                    XOffset + tileWidth ,YOffset + tileHeight/4);
+            g.drawLine(XOffset + (int)(tileWidth * downTrueRight), YOffset+ tileHeight*3/4,
+                    XOffset + tileWidth  ,YOffset + tileHeight*3/4);
+        }
+        g2d.setStroke(originalStroke);
+    }
+    protected void initializeConnections() {
+        connections = new EnumMap<>(Direction.class);
+        for (Direction directions : Direction.values()) {
+            connections.put(directions, false);
+        }
+    }
+    protected void VacuumAirStateChanger(boolean vacuumState){
+        this.isVacuum = vacuumState;
+        currentColor = vacuumState ? vacuumColor : airColor;
+    }
+    protected void paintComponent(Graphics g){
+        super.paintComponent(g);
+        double scale = 0.85;
+        double offsetScale = (1 - scale)/2;
+
+        int tileWidth = (int) (this.getWidth() * scale);
+        int tileHeight = (int) (this.getHeight() * scale);
+        int XOffset = (int) (this.getWidth() * offsetScale);
+        int YOffset = (int) (this.getHeight() * offsetScale);
+
+        paintConnections(g, XOffset, YOffset, tileWidth, tileHeight);
+
+        paintComponentBody(g, XOffset, YOffset, tileWidth, tileHeight);
+
+        paintErrorMark(g, XOffset, YOffset, tileWidth, tileHeight);
+
+        drawTextAndRectangle(g,XOffset,YOffset,30,30);
+
+        drawVacuumState(g, XOffset, YOffset, tileWidth, tileHeight);
+    }
     protected void paintConnections(Graphics g, int XOffset, int YOffset ,int tileWidth, int tileHeight){
         Graphics2D g2d = (Graphics2D) g;
         Stroke originalStroke = g2d.getStroke();
@@ -156,93 +242,31 @@ public abstract class Tile extends JPanel{
 
         g.drawString(this.stateType.getText(), textX, textY);
     }
-    protected void paintComponent(Graphics g){
-        super.paintComponent(g);
-        double scale = 0.85;
-        double offsetScale = (1 - scale)/2;
-
-        int tileWidth = (int) (this.getWidth() * scale);
-        int tileHeight = (int) (this.getHeight() * scale);
-        int XOffset = (int) (this.getWidth() * offsetScale);
-        int YOffset = (int) (this.getHeight() * offsetScale);
-
-        paintConnections(g, XOffset, YOffset, tileWidth, tileHeight);
-
-        paintComponentBody(g, XOffset, YOffset, tileWidth, tileHeight);
-
-        paintErrorMark(g, XOffset, YOffset, tileWidth, tileHeight);
-
-        drawTextAndRectangle(g,XOffset,YOffset,30,30);
-        //paintVacuumStateInfo(g, XOffset, YOffset, tileWidth/2, tileHeight/2);
-    }
-
-    public void paintInfoPanelTile(Graphics g, int XOffset, int YOffset, int tileWidth, int tileHeight){
-        g.setColor(this.getStateType().getColor());
-        int cornerRadius = 30;
-
-        g.fillRoundRect(XOffset,YOffset,tileWidth,tileHeight,cornerRadius,cornerRadius);
-        g.setColor(Color.BLACK);
-        g.drawRoundRect(XOffset,YOffset,tileWidth,tileHeight,cornerRadius,cornerRadius);
-    }
-
-    public void paintVacuumStateInfo(Graphics g, int XOffset, int YOffset, int tileWidth, int tileHeight){
+    protected void drawVacuumState(Graphics g, int XOffset, int YOffset, int tileWidth, int tileHeight){
         Graphics2D g2d = (Graphics2D) g;
-        Stroke originalStroke = g2d.getStroke();
-        g2d.setStroke(new BasicStroke(2.0f));
+        g2d.setStroke(new BasicStroke(4.0f));
 
-        g.setColor(currentColor);
-        g.fillRoundRect(XOffset + tileWidth/4,YOffset + tileHeight/4,tileWidth/2,tileHeight/2,10,10);
+        int buttonWidth = tileWidth/5;
+        int buttonHeight = tileHeight/3;
+        int buttonX = XOffset + (tileWidth/7) - buttonWidth/2;
+        int buttonY = YOffset + (tileHeight * 5/7) - buttonHeight/2;
 
+        //Draw the tile box, and color it
+        g.setColor(isVacuum ? vacuumColor : airColor);
+        g.fillRoundRect(buttonX, buttonY, buttonWidth, buttonHeight, 10, 10);
         g.setColor(Color.BLACK);
-        g.drawRoundRect(XOffset + tileWidth/4,YOffset + tileHeight/4,tileWidth/2,tileHeight/2,10,10);
+        g2d.drawRoundRect(buttonX, buttonY, buttonWidth, buttonHeight, 10, 10);
 
-        int upTrueLeft = 2;
-        int downTrueLeft = 2;
-        float upTrueRight = 1f/2f;
-        float downTrueRight = 1f/2f;
+        //Change font
+        Font font = new Font("Arial", Font.BOLD, 12);
+        g.setFont(font);
+        FontMetrics metrics = g.getFontMetrics();
 
-        if(this.connections.get(Direction.UP)) {
-            upTrueLeft = 4;
-            upTrueRight = 3f/4f;
-        }
-        if(this.connections.get(Direction.DOWN)){
-            downTrueLeft = 4;
-            downTrueRight = 3f/4f;
-        }
-
-        if(this.connections.get(Direction.UP)) {
-            g.setColor(currentColor);
-            g.fillRect(XOffset + tileWidth/4,YOffset,tileWidth/2,tileHeight/2);
-            g.setColor(Color.BLACK);
-            g.drawLine(XOffset + tileWidth/4, YOffset, XOffset + tileWidth/4 ,YOffset + tileHeight/2);
-            g.drawLine(XOffset + tileWidth*3/4, YOffset, XOffset + tileWidth*3/4 ,YOffset + tileHeight/2);
-        }
-        if(this.connections.get(Direction.DOWN)) {
-            g.setColor(currentColor);
-            g.fillRect(XOffset + tileWidth/4,YOffset + tileHeight/2 ,tileWidth/2,tileHeight/2);
-            g.setColor(Color.BLACK);
-            g.drawLine(XOffset + tileWidth/4, YOffset+ tileHeight/2, XOffset + tileWidth/4 , YOffset + tileHeight);
-            g.drawLine(XOffset + tileWidth *3/4, YOffset+ tileHeight/2, XOffset + tileWidth *3/4 , YOffset + tileHeight);
-        }
-        if(this.connections.get(Direction.LEFT)) {
-            g.setColor(currentColor);
-            g.fillRect(XOffset,YOffset + tileHeight/4 ,tileWidth/2,tileHeight/2);
-            g.setColor(Color.BLACK);
-            g.drawLine(XOffset, YOffset+ tileHeight/4,
-                    XOffset + tileWidth/upTrueLeft ,YOffset + tileHeight/4);
-
-            g.drawLine(XOffset, YOffset+ tileHeight*3/4,
-                    XOffset + tileWidth/downTrueLeft,YOffset + tileHeight*3/4);
-        }
-        if(this.connections.get(Direction.RIGHT)) {
-            g.setColor(currentColor);
-            g.fillRect(XOffset + tileWidth/2,YOffset + tileHeight/4 ,tileWidth/2,tileHeight/2);
-            g.setColor(Color.BLACK);
-            g.drawLine(XOffset + (int)(tileWidth * upTrueRight), YOffset+ tileHeight/4,
-                    XOffset + tileWidth ,YOffset + tileHeight/4);
-            g.drawLine(XOffset + (int)(tileWidth * downTrueRight), YOffset+ tileHeight*3/4,
-                    XOffset + tileWidth  ,YOffset + tileHeight*3/4);
-        }
-        g2d.setStroke(originalStroke);
+        //Draw text
+        int textWidth = metrics.stringWidth(isVacuum ? "Vacuum" : "Air");
+        int textX = buttonX + buttonWidth / 2 - textWidth / 2;
+        int textY = buttonY + buttonHeight / 2 + metrics.getAscent() / 2;
+        g.setColor(Color.WHITE);
+        g.drawString(isVacuum ? "Vacuum" : "Air", textX, textY);
     }
 }

@@ -27,7 +27,6 @@ public class Board extends JPanel{
     @Getter
     private final int yMaxDimension = 10;
     private final Color backgroundColor = Color.LIGHT_GRAY;
-
     public Board(int xDimension,int yDimension){
         this.xDimension = xDimension;
         this.yDimension = yDimension;
@@ -35,17 +34,6 @@ public class Board extends JPanel{
         this.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
         this.setBackground(backgroundColor);
         this.setFocusable(false);
-    }
-
-    private void initializeBoard(int xDimension,int yDimension){
-        this.board = new Tile[xDimension][yDimension];
-        this.setLayout(new GridLayout(xDimension,yDimension));
-        for (int i = 0; i < xDimension; i++){
-            for(int j = 0; j < yDimension; j++){
-                this.board[i][j] = new Empty(i,j);
-                this.add(this.board[i][j]);
-            }
-        }
     }
     public void reloadBoard(){
         this.removeAll();
@@ -55,7 +43,6 @@ public class Board extends JPanel{
             }
         }
     }
-
     //this method is for further development and will be useful when the simulation part of the project is added
     public void changeBoardMode(Mode mode){
 
@@ -112,7 +99,16 @@ public class Board extends JPanel{
             this.board[coordinateX][coordinateY + 1].getConnections().put(Direction.LEFT,false);
         }
     }
-
+    private void initializeBoard(int xDimension,int yDimension){
+        this.board = new Tile[xDimension][yDimension];
+        this.setLayout(new GridLayout(xDimension,yDimension));
+        for (int i = 0; i < xDimension; i++){
+            for(int j = 0; j < yDimension; j++){
+                this.board[i][j] = new Empty(i,j);
+                this.add(this.board[i][j]);
+            }
+        }
+    }
     public void TestStatus(Tile tile){
         for(int x = 0; x < this.xDimension; x++){
             for(int y = 0; y < this.yDimension; y++){

@@ -11,6 +11,6 @@ public class ForeVacuumPump extends ActiveTile{
 
     }
     @Override
-    public void activate() {
+    protected void activate() {
     }
 }

@@ -17,4 +17,8 @@ public class Empty extends Tile{
         int cornerRadius = 30;
         g.fillRoundRect(XOffset,YOffset,tileWidth,tileHeight,cornerRadius,cornerRadius);
     }
+    @Override
+    protected void drawVacuumState(Graphics g, int XOffset, int YOffset, int tileWidth, int tileHeight){
+
+    }
 }
