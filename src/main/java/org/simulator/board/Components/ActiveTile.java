@@ -39,7 +39,9 @@ public abstract class ActiveTile extends Tile{
 
         int buttonWidth = tileWidth/5;
         int buttonHeight = tileHeight/3;
-        int buttonX = XOffset + (tileWidth * 2/5) - buttonWidth/2;
+//        int buttonX = XOffset + (tileWidth * 2/5) - buttonWidth/2;
+//        int buttonY = YOffset + (tileHeight * 5/7) - buttonHeight/2;
+        int buttonX = XOffset + (tileWidth/7) - buttonWidth/2;
         int buttonY = YOffset + (tileHeight * 5/7) - buttonHeight/2;
 
         switchButton.setSize(buttonWidth,buttonHeight);
@@ -76,7 +78,7 @@ public abstract class ActiveTile extends Tile{
 
         paintComponentBody(g, XOffset, YOffset, tileWidth, tileHeight);
 
-        paintErrorMark(g, XOffset, YOffset, tileWidth, tileHeight);
+        paintErrorMark(g, XOffset, YOffset, tileWidth, tileHeight, new Color(238, 210, 2));
 
         drawTextAndRectangle(g,XOffset,YOffset,30,30);
 

@@ -142,7 +142,7 @@ public abstract class Tile extends JPanel{
 
         paintComponentBody(g, XOffset, YOffset, tileWidth, tileHeight);
 
-        paintErrorMark(g, XOffset, YOffset, tileWidth, tileHeight);
+        paintErrorMark(g, XOffset, YOffset, tileWidth, tileHeight,new Color(238, 210, 2));
 
         drawTextAndRectangle(g,XOffset,YOffset,30,30);
 
@@ -184,6 +184,8 @@ public abstract class Tile extends JPanel{
         g2d.setStroke(originalStroke);
     }
     protected void paintComponentBody(Graphics g, int tileX, int tileY ,int tileWidth, int tileHeight){
+        Graphics2D g2d = (Graphics2D) g;
+        g2d.setStroke(new BasicStroke(4.0f));
         g.setColor(this.stateType.getColor());
         int cornerRadius = 30;
 
@@ -191,18 +193,18 @@ public abstract class Tile extends JPanel{
         g.setColor(Color.BLACK);
         g.drawRoundRect(tileX,tileY,tileWidth,tileHeight,cornerRadius,cornerRadius);
     }
-    protected void paintErrorMark(Graphics g, int tileX, int tileY ,int tileWidth, int tileHeight){
+    protected void paintErrorMark(Graphics g, int tileX, int tileY ,int tileWidth, int tileHeight, Color color){
         if(tooManyConnectionCheck() || tooFewConnectionCheck()){
-            g.setColor(Color.RED);
+            g.setColor(color);
 
             // Calculate dimensions and position for the circle
             int circleDiameter = Math.min(tileWidth, tileHeight) / 4;
-            int circleX = tileX + (tileWidth * 6/7)  - circleDiameter / 2;
+            int circleX = tileX + (tileWidth/7)  - circleDiameter / 2;
             int circleY = tileY + tileHeight / 4 - circleDiameter / 2;
 
             // Draw red circle
             g.fillOval(circleX, circleY, circleDiameter, circleDiameter);
-            g.setColor(Color.WHITE);
+            g.setColor(Color.BLACK);
             g.drawOval(circleX, circleY, circleDiameter, circleDiameter);
 
             int exclamationSize = circleDiameter * 2 / 3;
@@ -246,10 +248,12 @@ public abstract class Tile extends JPanel{
         Graphics2D g2d = (Graphics2D) g;
         g2d.setStroke(new BasicStroke(4.0f));
 
-        int buttonWidth = tileWidth/5;
+        int buttonWidth = tileWidth* 2/5;
         int buttonHeight = tileHeight/3;
-        int buttonX = XOffset + (tileWidth/7) - buttonWidth/2;
+        int buttonX = XOffset + (tileWidth/2) - buttonWidth/2;
         int buttonY = YOffset + (tileHeight * 5/7) - buttonHeight/2;
+//        int buttonX = XOffset + (tileWidth/7) - buttonWidth/2;
+//        int buttonY = YOffset + (tileHeight * 5/7) - buttonHeight/2;
 
         //Draw the tile box, and color it
         g.setColor(isVacuum ? vacuumColor : airColor);
@@ -263,10 +267,10 @@ public abstract class Tile extends JPanel{
         FontMetrics metrics = g.getFontMetrics();
 
         //Draw text
-        int textWidth = metrics.stringWidth(isVacuum ? "Vacuum" : "Air");
+        int textWidth = metrics.stringWidth(isVacuum ? "Fore vacuum" : "Air");
         int textX = buttonX + buttonWidth / 2 - textWidth / 2;
         int textY = buttonY + buttonHeight / 2 + metrics.getAscent() / 2;
         g.setColor(Color.WHITE);
-        g.drawString(isVacuum ? "Vacuum" : "Air", textX, textY);
+        g.drawString(isVacuum ? "Fore vacuum" : "Air", textX, textY);
     }
 }

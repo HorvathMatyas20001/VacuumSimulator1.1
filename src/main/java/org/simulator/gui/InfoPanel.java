@@ -42,8 +42,9 @@ public class InfoPanel extends JPanel {
         updateButtonState(g,20,230,70,50);
         drawHeader(g,0,300,getWidth(),30,"Basic information");
         printBasicInfo(g,0,330);
-        drawHeader(g,0,380,getWidth(),30,"Errors ");
-        printErrors(g,0,410);
+        drawHeader(g,0,380,getWidth(),30,"Warnings ");
+        printWarnings(g,0,410);
+        drawHeader(g,0,460,getWidth(),30,"Errors ");
 
     }
     protected void toggleActive() {
@@ -80,7 +81,7 @@ public class InfoPanel extends JPanel {
         g.drawString(text, XOffset + 5, YOffset+ 20);
     }
     private void printInspectTileName(Graphics g, int XOffset, int YOffset){
-        g.drawString("Inspected element:" + this.tile.getStateType().getText(), XOffset + 5, YOffset);
+        g.drawString("Component:" + this.tile.getStateType().getText(), XOffset + 5, YOffset);
     }
     private void drawInfoTile(Graphics g, int XOffset, int YOffset){
         Graphics2D g2d = (Graphics2D) g;
@@ -128,13 +129,13 @@ public class InfoPanel extends JPanel {
         g2d.setStroke(originalStroke); // Reset the stroke size
     }
     private void printBasicInfo(Graphics g, int XOffset, int YOffset) {
-        String maxConnections =  "Max Connection: " + tile.getStateType().getMaxConnections() ;
-        String minConnections =  "Min Connection: " + tile.getStateType().getMinConnections() ;
+        String maxConnections =  "Max Connections: " + tile.getStateType().getMaxConnections() ;
+        String minConnections =  "Min Connections: " + tile.getStateType().getMinConnections() ;
 
         g.drawString(maxConnections, XOffset + 5, YOffset + 20);
         g.drawString(minConnections, XOffset + 5, YOffset + 40);
     }
-    private void printErrors(Graphics g, int XOffset, int YOffset) {
+    private void printWarnings(Graphics g, int XOffset, int YOffset) {
         if(tile.tooFewConnectionCheck()){
             g.drawString("the current component has", XOffset + 5, YOffset + 20);
             g.drawString("too few connections", XOffset + 5, YOffset + 40);
