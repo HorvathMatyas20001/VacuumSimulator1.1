@@ -17,7 +17,7 @@ import static org.simulator.data.saveFile.Save.saveBoardToJson;
 public class SaveAsWindow extends UniversalAdapter {
     private final SimulatorLogic logic;
     private final JFrame window;
-    private JTextField fileNameField, pathField;
+    private final JTextField fileNameField, pathField;
     private final JButton createButton, cancelButton, browseButton;
     private boolean isCorrectFileName, isCorrectPath;
 
@@ -63,7 +63,7 @@ public class SaveAsWindow extends UniversalAdapter {
 
         panel.add(locationPanel);
 
-        createButton = new JButton("Create");
+        createButton = new JButton("Save");
         createButton.addActionListener(this);
         panel.add(createButton);
 
@@ -138,6 +138,10 @@ public class SaveAsWindow extends UniversalAdapter {
         return path;
     }
     private void creatNewFile(){
+        if (logic.getBoard() == null) {
+            System.out.println("No board to save.");
+            return;
+        }
         logic.setPath(pathField.getText());
         logic.getBoard().revalidate();
         logic.setPath(createPath());

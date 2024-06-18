@@ -6,7 +6,7 @@ import org.simulator.controls.UniversalAdapter;
 import java.awt.event.ActionEvent;
 
 public class NewFileCreator extends UniversalAdapter{
-    SimulatorLogic logic;
+    private SimulatorLogic logic;
     public NewFileCreator(SimulatorLogic logic){
         this.logic = logic;
     }

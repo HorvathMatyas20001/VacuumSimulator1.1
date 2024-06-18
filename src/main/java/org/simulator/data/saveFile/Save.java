@@ -3,8 +3,8 @@ package org.simulator.data.saveFile;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.simulator.board.Board;
+import org.simulator.board.Components.Tile;
 import org.simulator.board.Direction;
-import org.simulator.board.Tile;
 import org.simulator.controls.SimulatorLogic;
 import org.simulator.controls.UniversalAdapter;
 
@@ -13,28 +13,30 @@ import java.io.FileWriter;
 
 
 public class Save extends UniversalAdapter {
-    private SimulatorLogic logic;
+    private final SimulatorLogic logic;
     public Save(SimulatorLogic logic){
         this.logic = logic;
     }
     public static JSONObject saveTile(Tile tile){
         JSONObject jsonTile = new JSONObject();
-        if(!tile.getNeighbours().isEmpty()){
-            JSONObject neighbour = new JSONObject();
-            for(Direction direction: Direction.values()){
-                if(tile.getNeighbours().containsKey(direction)) {
-                    neighbour.put(direction.toString(),tile.getNeighbours().get(direction).isConnected());
-                    jsonTile.put("neighbour",neighbour);
-                }
-            }
-
+        JSONObject connections = new JSONObject();
+        for(Direction direction: Direction.values()){
+            connections.put(direction.toString(),tile.getConnections().get(direction));
+            jsonTile.put("connections",connections);
         }
+
         jsonTile.put("State",tile.getStateType());
         return jsonTile;
 
     }
 
-    public static void saveBoardToJson(Board board, String path)/*throws JSException, IOException */{
+    public static void saveBoardToJson(Board board, String path){
+        if (board == null) {
+            System.out.println("No board to save.");
+            Runtime.Version version = Runtime.version();
+            System.out.println("java:" + version);
+            return;
+        }
         JSONObject jsonBoard = new JSONObject();
         JSONArray column = new JSONArray();
         for(int i = 0; i < board.getXDimension(); i++){
@@ -49,9 +51,8 @@ public class Save extends UniversalAdapter {
         try (FileWriter fileWriter = new FileWriter(path)) {
             fileWriter.write(jsonBoard.toString());
         }catch(Exception e){
-            System.out.println("trouble");
+            System.out.println("Failed to save board: " + e.getMessage());
         }
-
     }
 
     @Override

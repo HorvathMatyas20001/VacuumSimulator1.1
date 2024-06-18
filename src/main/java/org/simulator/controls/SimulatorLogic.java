@@ -3,15 +3,17 @@ package org.simulator.controls;
 import lombok.Getter;
 import lombok.Setter;
 import org.simulator.board.Board;
-import org.simulator.board.Direction;
+import org.simulator.board.Components.Tile;
 import org.simulator.board.StateType;
-import org.simulator.board.Tile;
+import org.simulator.data.openFile.Testloadboard;
+import org.simulator.gui.ComponentButtons;
 import org.simulator.gui.InfoPanel;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class SimulatorLogic extends UniversalAdapter{
@@ -29,7 +31,18 @@ public class SimulatorLogic extends UniversalAdapter{
     private String path;
     @Getter
     private final InfoPanel infoPanel;
-
+    @Setter
+    private List<ComponentButtons> componentButtonsList;
+    @Getter
+    private final int xMinDimension = 2;
+    @Getter
+    private final int yMinDimension = 2;
+    @Getter
+    private final int xMaxDimension = 10;
+    @Getter
+    private final int yMaxDimension = 10;
+    //for testing
+    public Testloadboard testloadboard;
     public SimulatorLogic(JFrame mainFrame){
         this.drawType = StateType.NONE;
         this.mainFrame = mainFrame;
@@ -37,39 +50,33 @@ public class SimulatorLogic extends UniversalAdapter{
         this.mode = Mode.DRAW_MODE;
         this.startTile = null;
         this.endTile = null;
-        infoPanel = new InfoPanel();
+        this.board = null;
+        infoPanel = new InfoPanel(this);
+        componentButtonsList = new ArrayList<>();
+
+        //for testing
+//        this.testloadboard = new Testloadboard(this);
+//        testCodeLoadBoard();
     }
     public void changeMode(Mode mode){
         this.board.changeBoardMode(mode);
         this.mode = mode;
         this.board.repaint();
     }
-    private void paintTile(MouseEvent e){
-        try {
-            Component current = this.board.getComponentAt(e.getX(), e.getY());
-            if (drawType != StateType.NONE && drawType != this.board.findTile((Tile) current).getStateType()) {
-                this.board.changeTile((Tile) current, drawType);
+    public void updateButtons(){
+        for(ComponentButtons buttons : componentButtonsList){
+            buttons.updateButton(false);
+            if(buttons.getType() == drawType){
+                buttons.setActiveToggle(true);
             }
-            CheckConnectionLogic.setFlagForIncorrectConnections(board);
-            this.board.repaint();
-        }catch(Exception i){
-            //System.out.println("not tile");
         }
     }
-    private void getComponentInfo(MouseEvent e){
-        this.board.repaint();
-        try{
-            Component current = this.board.getComponentAt(e.getX(), e.getY());
-            Tile temp = (Tile)current;
-            infoPanel.updateInfoPanel(temp);
-        }catch(ClassCastException i){}
-    }
-
+    //mouseMoved is only for testing
     @Override
     public void mouseMoved(MouseEvent e){
         try{
             Component current = this.board.getComponentAt(e.getX(),e.getY());
-            //this.board.TestStatus((Tile) current);
+            this.board.TestStatus((Tile) current);
             //test((Tile) current);
         }catch(Exception i){
             //System.out.println("not a tile");
@@ -80,7 +87,6 @@ public class SimulatorLogic extends UniversalAdapter{
         if (SwingUtilities.isRightMouseButton(e)) {
             getComponentInfo(e);
         }else if(SwingUtilities.isLeftMouseButton(e)){
-
             paintTile(e);
         }
     }
@@ -88,36 +94,43 @@ public class SimulatorLogic extends UniversalAdapter{
     public void mousePressed(MouseEvent e) {
         try{
             Component current = this.board.getComponentAt(e.getX(), e.getY());
-            startTile = this.board.findTile((Tile) current);
+            startTile = (Tile) current;
         }catch(Exception i){
-            //System.out.println("not tile");
+            System.out.println("not tile");
         }
-
     }
-
     @Override
     public void mouseReleased(MouseEvent e) {
         try {
             Component current = this.board.getComponentAt(e.getX(), e.getY());
-            endTile = this.board.findTile((Tile) current);
-            for (Direction direction : Direction.values()) {
-                if (endTile.getNeighbours().containsKey(direction)) {
-                    if (Objects.equals(endTile.getNeighbours().get(direction).getTile(), startTile)) {
-                        if (!endTile.getNeighbours().get(direction).isConnected()) {
-                            endTile.connectBothWays(direction);
-                        } else {
-                            endTile.disconnectBothWays(direction);
-                        }
-                    }
-                }
-            }
-            //testStartAndEnd(startTile, endTile);
+            endTile = (Tile) current;
+            this.board.smartTileConnectDisconnect(startTile,endTile);
             endTile = null;
             startTile = null;
-            CheckConnectionLogic.setFlagForIncorrectConnections(board);
+            this.infoPanel.repaint();
             this.board.repaint();
         }catch(Exception i){
-            //System.out.println("not tile");
+            System.out.println("not tile");
+        }
+    }
+    private void paintTile(MouseEvent e){
+        try {
+            Component current = this.board.getComponentAt(e.getX(), e.getY());
+            Tile temp = (Tile)current;
+            if (drawType != StateType.NONE && drawType != temp.getStateType()) {
+                this.board.replaceTile((Tile) current, drawType);
+            }
+            this.board.repaint();
+        }catch(Exception i){
+            System.out.println("not tile");
+        }
+    }
+    private void getComponentInfo(MouseEvent e){
+        try{
+            Component current = this.board.getComponentAt(e.getX(), e.getY());
+            infoPanel.updateInfoPanel((Tile)current);
+        }catch(ClassCastException i){
+            System.out.println("not tile");
         }
     }
     void test(Tile current){
@@ -129,5 +142,9 @@ public class SimulatorLogic extends UniversalAdapter{
         this.board.TestStatus(startTile);
         System.out.println("end:");
         this.board.TestStatus(endTile);
+    }
+    void testCodeLoadBoard(){
+        testloadboard.readInBoard();
+        testloadboard.loadBoard();
     }
 }

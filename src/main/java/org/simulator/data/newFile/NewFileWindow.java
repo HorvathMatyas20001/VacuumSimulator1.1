@@ -15,11 +15,13 @@ import java.nio.file.Paths;
 
 import static org.simulator.data.saveFile.Save.saveBoardToJson;
 
+//import static org.simulator.data.saveFile.Save.saveBoardToJson;
+
 
 public class NewFileWindow extends UniversalAdapter {
     private final SimulatorLogic logic;
     private final JFrame window;
-    private JTextField fileNameField, boardSizeXField, boardSizeYField, pathField;
+    private final JTextField fileNameField, boardSizeXField, boardSizeYField, pathField;
     private final JButton createButton, cancelButton, browseButton;
     private boolean isCorrectFileName, isCorrectBoardSizeX, isCorrectBoardSizeY, isCorrectPath;
 
@@ -53,7 +55,7 @@ public class NewFileWindow extends UniversalAdapter {
 
         boardSizeXField = new JTextField(25);
         boardSizeXField.addKeyListener(this);
-        boardSizeXField.setToolTipText("Only number are excepted in the ranke of 1-100");
+        boardSizeXField.setToolTipText("Board size can be in the range of "+logic.getXMinDimension() +" - "+logic.getXMaxDimension());
         panel.add(boardSizeXField);
 //-------------------------- Board Size y --------------------------
         JLabel boardSizeYLabel = new JLabel("Board Size Y:");
@@ -61,7 +63,7 @@ public class NewFileWindow extends UniversalAdapter {
 
         boardSizeYField = new JTextField(25);
         boardSizeYField.addKeyListener(this);
-        boardSizeYField.setToolTipText("Only number are excepted in the range of 1-100");
+        boardSizeYField.setToolTipText("Board size can be in the range of "+logic.getYMinDimension() +" - "+logic.getYMaxDimension());
         panel.add(boardSizeYField);
 //-------------------------- Location --------------------------
         JLabel locationLabel = new JLabel("Location:");
@@ -133,22 +135,22 @@ public class NewFileWindow extends UniversalAdapter {
     private void boardSizeXValidation(){
         if(isValidBoardSize(boardSizeXField)){
             boardSizeXField.setForeground(Color.BLACK);
-            boardSizeXField.setToolTipText("Only number are excepted in the range of 1-40");
+            boardSizeXField.setToolTipText("Board size can be in the range of "+logic.getXMinDimension() +" - "+logic.getXMaxDimension());
             isCorrectBoardSizeX = true;
         }else{
             boardSizeXField.setForeground(Color.RED);
-            boardSizeXField.setToolTipText("Incorrect board size, enter a number in the range of 1-40");
+            boardSizeXField.setToolTipText("Incorrect board size, enter a number in the range of "+logic.getXMinDimension() +" - "+logic.getXMaxDimension());
             isCorrectBoardSizeX = false;
         }
     }
     private void boardSizeYValidation(){
         if(isValidBoardSize(boardSizeYField)){
             boardSizeYField.setForeground(Color.BLACK);
-            boardSizeYField.setToolTipText("Only number are excepted in the range of 1-40");
+            boardSizeYField.setToolTipText("Board size can be in the range of "+logic.getYMinDimension() +" - "+logic.getYMaxDimension());
             isCorrectBoardSizeY = true;
         }else{
             boardSizeYField.setForeground(Color.RED);
-            boardSizeYField.setToolTipText("Incorrect board size, enter a number in the range of 1-40");
+            boardSizeYField.setToolTipText("Incorrect board size, enter a number in the range of "+logic.getYMinDimension() +" - "+logic.getYMaxDimension());
             isCorrectBoardSizeY = false;
         }
     }
@@ -179,7 +181,7 @@ public class NewFileWindow extends UniversalAdapter {
             }
         }
         int number = Integer.parseInt(text);
-        return (number > 0 && number <= 40);
+        return (number > logic.getYMinDimension() && number <= logic.getYMaxDimension());
     }
     private boolean isValidPath(JTextField JTextPath) {
         Path path = Paths.get(JTextPath.getText());
@@ -203,6 +205,7 @@ public class NewFileWindow extends UniversalAdapter {
         logic.getMainFrame().add(board);
         logic.getBoard().revalidate();
         logic.setPath(createPath());
+        logic.getInfoPanel().clearInfoPanel();
         saveBoardToJson(board,createPath());
         testPath();
     }

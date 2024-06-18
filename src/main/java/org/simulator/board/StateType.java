@@ -1,33 +1,41 @@
 package org.simulator.board;
 
 import lombok.Getter;
+import org.simulator.board.Components.*;
 
 import java.awt.*;
 
 public enum StateType {
-    EMPTY(0,0,false,Color.WHITE),
-    PIPE(2,4,false,Color.PINK),
-    CHAMBER(1,4,false,Color.CYAN),
-    GAUGE(1,1,false,Color.MAGENTA),
-    HV_PUMP(2,2,true,Color.LIGHT_GRAY),
-    PUMP_STAND(1,1,true,Color.DARK_GRAY),
-    FORE_VACUUM_PUMP(1,1,true,Color.BLACK),
-    VALVE(2,2,true,Color.YELLOW),
-    VENTING_VALVE(1,1,true,Color.ORANGE),
-    NONE(0,0,false,null);
+    EMPTY(0,0,Color.WHITE, false, Empty.class,"Empty"),
+    PIPE(2,4,new Color(127,255,0), false, Pipe.class,"Pipe"),
+    CHAMBER(1,4,new Color(0,128,0), false, Chamber.class,"Chamber"),
+    GAUGE(1,1,new Color(138,43,226), false, Gauge.class,"Gauge"),
+    HV_PUMP(2,2,new Color(255, 255, 0), true, HVPump.class,"H.V. Pump"),
+    PUMP_STAND(1,1,new Color(255, 191, 0), true, PumpingStand.class,"Pumping stand"),
+    FORE_VACUUM_PUMP(1,1,new Color(191,105,0), true, ForeVacuumPump.class,"Fore vacuum pump"),
+    VALVE(2,2,new Color(70,130,180), true, Valve.class,"Valve"),
+    VENTING_VALVE(1,1,new Color(0,0,139), true, VentingValve.class,"Venting valve"),
+    NONE(0,0,null, false,null,"None");
     @Getter
     private final int minConnections;
     @Getter
     private final int maxConnections;
     @Getter
+    private final Color color;
+    @Getter
+    private final Class<? extends Tile> tileClass;
+    @Getter
     private final boolean activeElement;
     @Getter
-    private final Color color;
+    private final String text;
 
-    StateType(int minConnections, int maxConnections,boolean activeElement,Color color){
+    StateType(int minConnections, int maxConnections,Color color,boolean activeElement,Class<? extends Tile> tileClass,String text){
         this.minConnections = minConnections;
         this.maxConnections = maxConnections;
-        this.activeElement = activeElement;
         this.color = color;
+        this.activeElement = activeElement;
+        this.tileClass = tileClass;
+        this.text = text;
     }
+
 }
