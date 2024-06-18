@@ -63,7 +63,7 @@ public class SaveAsWindow extends UniversalAdapter {
 
         panel.add(locationPanel);
 
-        createButton = new JButton("Create");
+        createButton = new JButton("Save");
         createButton.addActionListener(this);
         panel.add(createButton);
 

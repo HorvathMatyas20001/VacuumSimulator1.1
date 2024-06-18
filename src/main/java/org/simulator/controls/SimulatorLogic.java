@@ -55,8 +55,8 @@ public class SimulatorLogic extends UniversalAdapter{
         componentButtonsList = new ArrayList<>();
 
         //for testing
-        this.testloadboard = new Testloadboard(this);
-        testCodeLoadBoard();
+//        this.testloadboard = new Testloadboard(this);
+//        testCodeLoadBoard();
     }
     public void changeMode(Mode mode){
         this.board.changeBoardMode(mode);

@@ -50,6 +50,37 @@ public abstract class Tile extends JPanel{
         }
         return connectionCounter < this.stateType.getMinConnections();
     }
+    protected void initializeConnections() {
+        connections = new EnumMap<>(Direction.class);
+        for (Direction directions : Direction.values()) {
+            connections.put(directions, false);
+        }
+    }
+    protected void VacuumAirStateChanger(boolean vacuumState){
+        this.isVacuum = vacuumState;
+        currentColor = vacuumState ? vacuumColor : airColor;
+    }
+    //-----------------------   gui    -----------------------//
+    protected void paintComponent(Graphics g){
+        super.paintComponent(g);
+        double scale = 0.85;
+        double offsetScale = (1 - scale)/2;
+
+        int tileWidth = (int) (this.getWidth() * scale);
+        int tileHeight = (int) (this.getHeight() * scale);
+        int XOffset = (int) (this.getWidth() * offsetScale);
+        int YOffset = (int) (this.getHeight() * offsetScale);
+
+        paintConnections(g, XOffset, YOffset, tileWidth, tileHeight);
+
+        paintComponentBody(g, XOffset, YOffset, tileWidth, tileHeight);
+
+        paintErrorMark(g, XOffset, YOffset, tileWidth, tileHeight,new Color(238, 210, 2));
+
+        drawTextAndRectangle(g,XOffset,YOffset,30,30);
+
+        drawVacuumState(g, XOffset, YOffset, tileWidth, tileHeight);
+    }
     public void paintInfoPanelTile(Graphics g, int XOffset, int YOffset, int tileWidth, int tileHeight){
         g.setColor(this.getStateType().getColor());
         int cornerRadius = 30;
@@ -117,36 +148,6 @@ public abstract class Tile extends JPanel{
                     XOffset + tileWidth  ,YOffset + tileHeight*3/4);
         }
         g2d.setStroke(originalStroke);
-    }
-    protected void initializeConnections() {
-        connections = new EnumMap<>(Direction.class);
-        for (Direction directions : Direction.values()) {
-            connections.put(directions, false);
-        }
-    }
-    protected void VacuumAirStateChanger(boolean vacuumState){
-        this.isVacuum = vacuumState;
-        currentColor = vacuumState ? vacuumColor : airColor;
-    }
-    protected void paintComponent(Graphics g){
-        super.paintComponent(g);
-        double scale = 0.85;
-        double offsetScale = (1 - scale)/2;
-
-        int tileWidth = (int) (this.getWidth() * scale);
-        int tileHeight = (int) (this.getHeight() * scale);
-        int XOffset = (int) (this.getWidth() * offsetScale);
-        int YOffset = (int) (this.getHeight() * offsetScale);
-
-        paintConnections(g, XOffset, YOffset, tileWidth, tileHeight);
-
-        paintComponentBody(g, XOffset, YOffset, tileWidth, tileHeight);
-
-        paintErrorMark(g, XOffset, YOffset, tileWidth, tileHeight,new Color(238, 210, 2));
-
-        drawTextAndRectangle(g,XOffset,YOffset,30,30);
-
-        drawVacuumState(g, XOffset, YOffset, tileWidth, tileHeight);
     }
     protected void paintConnections(Graphics g, int XOffset, int YOffset ,int tileWidth, int tileHeight){
         Graphics2D g2d = (Graphics2D) g;

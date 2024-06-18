@@ -32,6 +32,10 @@ public class BoardEdit extends UniversalAdapter {
     }
     private void initializeMenuActions(){
         menuActions.put("Add row to bottom", () -> {
+            if (logic.getBoard() == null) {
+                // Handle the case where logic.getBoard() is null
+                return;
+            }
             if (logic.getBoard().getXDimension() >= logic.getBoard().getXMaxDimension()) { // Check if adding would violate constraint
                 JOptionPane.showMessageDialog(logic.getMainFrame(), "Adding row is prohibited as it would result in more than " +
                         logic.getBoard().getXMaxDimension() +" rows.", "Prohibited Action", JOptionPane.WARNING_MESSAGE);
@@ -40,6 +44,10 @@ public class BoardEdit extends UniversalAdapter {
             }
         });
         menuActions.put("Add row to top", () -> {
+            if (logic.getBoard() == null) {
+                // Handle the case where logic.getBoard() is null
+                return;
+            }
             if (logic.getBoard().getXDimension() >= logic.getBoard().getXMaxDimension()) { // Check if adding would violate constraint
                 JOptionPane.showMessageDialog(logic.getMainFrame(), "Adding row is prohibited as it would result in more than " +
                         logic.getBoard().getXMaxDimension() +" rows.", "Prohibited Action", JOptionPane.WARNING_MESSAGE);
@@ -48,6 +56,10 @@ public class BoardEdit extends UniversalAdapter {
             }
         });
         menuActions.put("Add column to right", () -> {
+            if (logic.getBoard() == null) {
+                // Handle the case where logic.getBoard() is null
+                return;
+            }
             if (logic.getBoard().getYDimension() >= logic.getBoard().getYMaxDimension()) { // Check if adding would violate constraint
                 JOptionPane.showMessageDialog(logic.getMainFrame(), "Adding column is prohibited as it would result in more than " +
                         logic.getBoard().getYMaxDimension() +" columns.", "Prohibited Action", JOptionPane.WARNING_MESSAGE);
@@ -56,6 +68,10 @@ public class BoardEdit extends UniversalAdapter {
             }
         });
         menuActions.put("Add column to left", () -> {
+            if (logic.getBoard() == null) {
+                // Handle the case where logic.getBoard() is null
+                return;
+            }
             if (logic.getBoard().getYDimension() >= logic.getBoard().getYMaxDimension()) { // Check if adding would violate constraint
                 JOptionPane.showMessageDialog(logic.getMainFrame(), "Adding column is prohibited as it would result in more than " +
                         logic.getBoard().getYMaxDimension() +" columns.", "Prohibited Action", JOptionPane.WARNING_MESSAGE);
@@ -65,6 +81,10 @@ public class BoardEdit extends UniversalAdapter {
         });
 
         menuActions.put("Remove row from bottom", () -> {
+            if (logic.getBoard() == null) {
+                // Handle the case where logic.getBoard() is null
+                return;
+            }
             if (logic.getBoard().getXDimension() <= logic.getBoard().getXMinDimension()) { // Check if removing would violate constraint
                 JOptionPane.showMessageDialog(logic.getMainFrame(), "Removing row is prohibited as it would result in less than " +
                         logic.getBoard().getXMinDimension() +" rows.", "Prohibited Action", JOptionPane.WARNING_MESSAGE);
@@ -73,6 +93,10 @@ public class BoardEdit extends UniversalAdapter {
             }
         });
         menuActions.put("Remove row from top", () -> {
+            if (logic.getBoard() == null) {
+                // Handle the case where logic.getBoard() is null
+                return;
+            }
             if (logic.getBoard().getXDimension() <= logic.getBoard().getXMinDimension()) { // Check if removing would violate constraint
                 JOptionPane.showMessageDialog(logic.getMainFrame(), "Removing row is prohibited as it would result in less than " +
                         logic.getBoard().getXMinDimension() +" rows.", "Prohibited Action", JOptionPane.WARNING_MESSAGE);
@@ -81,6 +105,10 @@ public class BoardEdit extends UniversalAdapter {
             }
         });
         menuActions.put("Remove column from right", () -> {
+            if (logic.getBoard() == null) {
+                // Handle the case where logic.getBoard() is null
+                return;
+            }
             if (logic.getBoard().getYDimension() <= logic.getBoard().getYMinDimension()) { // Check if removing would violate constraint
                 JOptionPane.showMessageDialog(logic.getMainFrame(), "Removing column is prohibited as it would result in less than " +
                         logic.getBoard().getYMinDimension() +" columns.", "Prohibited Action", JOptionPane.WARNING_MESSAGE);
@@ -89,6 +117,10 @@ public class BoardEdit extends UniversalAdapter {
             }
         });
         menuActions.put("Remove column from left", () -> {
+            if (logic.getBoard() == null) {
+                // Handle the case where logic.getBoard() is null
+                return;
+            }
             if (logic.getBoard().getYDimension() <= logic.getBoard().getYMinDimension()) { // Check if removing would violate constraint
                 JOptionPane.showMessageDialog(logic.getMainFrame(), "Removing column is prohibited as it would result in less than " +
                         logic.getBoard().getYMinDimension() +" columns.", "Prohibited Action", JOptionPane.WARNING_MESSAGE);
@@ -130,7 +162,6 @@ public class BoardEdit extends UniversalAdapter {
         return newBoard;
     }
     private Board addRowsToTop(int numRowsToAdd) {
-
         int xDimension = logic.getBoard().getXDimension();
         int yDimension = logic.getBoard().getYDimension();
 
